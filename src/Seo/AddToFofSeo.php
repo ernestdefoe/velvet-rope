@@ -6,6 +6,8 @@
 
 namespace ErnestDefoe\GuestGate\Seo;
 
+use FoF\Seo\Event\PreparingPageMeta;
+
 /**
  * FoF SEO's PreparingPageMeta: put the paywall properties on the schema.org
  * node FoF SEO writes for the discussion (DiscussionForumPosting or QAPage),
@@ -21,8 +23,7 @@ class AddToFofSeo
     ) {
     }
 
-    /** @param \FoF\Seo\Event\PreparingPageMeta $event */
-    public function handle(object $event): void
+    public function handle(PreparingPageMeta $event): void
     {
         $data = $event->document->payload['apiDocument']->data ?? null;
 

@@ -21,6 +21,7 @@ use Flarum\Api\Endpoint\Show;
 use Flarum\Api\Resource\DiscussionResource;
 use Flarum\Api\Resource\PostResource;
 use Flarum\Extend;
+use FoF\Seo\Event\PreparingPageMeta;
 
 $prefix = 'ernestdefoe-guest-gate.';
 
@@ -55,7 +56,7 @@ return [
 
     (new Extend\Conditional())
         ->whenExtensionEnabled('fof-seo', fn () => [
-            (new Extend\Event())->listen('FoF\Seo\Event\PreparingPageMeta', AddToFofSeo::class),
+            (new Extend\Event())->listen(PreparingPageMeta::class, AddToFofSeo::class),
         ]),
 
     (new Extend\Settings())

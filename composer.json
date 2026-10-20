@@ -67,7 +67,8 @@
     "flarum/mentions": "^2.0",
     "flarum/subscriptions": "^2.0",
     "laravel/pint": "^1.32",
-    "flarum/markdown": "^2.0"
+    "flarum/markdown": "^2.0",
+    "fof/seo": "^4.0@beta"
   },
   "scripts": {
     "test": [
