@@ -10,7 +10,6 @@ use ErnestDefoe\GuestGate\Gate;
 use ErnestDefoe\GuestGate\MailRecipient;
 use ErnestDefoe\GuestGate\Visitors;
 use Flarum\Http\RequestUtil;
-use Flarum\Http\UrlGenerator;
 use Flarum\Post\CommentPost;
 use Flarum\User\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,7 +32,6 @@ class GateContent
         protected Gate $gate,
         protected Visitors $visitors,
         protected MailRecipient $mail,
-        protected UrlGenerator $url,
     ) {
     }
 
@@ -63,6 +61,6 @@ class GateContent
 
     private function transformer(): Transformer
     {
-        return $this->transformer ??= new Transformer((string) parse_url($this->url->to('forum')->base(), PHP_URL_HOST));
+        return $this->transformer ??= new Transformer();
     }
 }

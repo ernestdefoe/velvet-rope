@@ -16,4 +16,4 @@ export interface MeterInfo {
   period: 'day' | 'week' | 'month';
 }
 
-export type LockKind = 'image' | 'link' | 'file' | 'embed';
+export type LockKind = 'image' | 'file' | 'embed';

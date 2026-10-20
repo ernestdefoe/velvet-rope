@@ -4,7 +4,7 @@ ernestdefoe-guest-gate:
     prompt:
       guest_title: Join to read the whole discussion
       guest_title_short: Sign up to read this reply
-      guest_text: Sign up for free to read every reply, see images and links, and join the conversation.
+      guest_text: Sign up for free to read every reply, see images and files, and join the conversation.
       meter_title_day: "{count, plural, one {You've read your free discussion for today} other {You've read your # free discussions for today}}"
       meter_title_week: "{count, plural, one {You've read your free discussion for this week} other {You've read your # free discussions for this week}}"
       meter_title_month: "{count, plural, one {You've read your free discussion for this month} other {You've read your # free discussions for this month}}"
@@ -24,17 +24,14 @@ ernestdefoe-guest-gate:
     lock:
       guest:
         image: Sign up to see this image
-        link: Sign up to see this link
         file: Sign up to download this file
         embed: Sign up to watch this
       confirm:
         image: Confirm your email to see this image
-        link: Confirm your email to see this link
         file: Confirm your email to download this file
         embed: Confirm your email to watch this
       member:
         image: This image is for members of another group
-        link: This link is for members of another group
         file: This file is for members of another group
         embed: This video is for members of another group
 
@@ -65,9 +62,8 @@ ernestdefoe-guest-gate:
       preview: Preview of later posts
       preview_help: How many characters of each later post everyone else sees, 0 to show none.
       lock: Lock in the free posts
-      lock_help: Replaced by a prompt for everyone else. Links within the forum always stay.
+      lock_help: "Replaced by a prompt for everyone else. To hide links too, pair this with Guest CTA (ramon/guest-cta)."
       lock_image: Images
-      lock_link: Links
       lock_file: Attachments
       lock_embed: Videos and embeds
       upgrade: Upgrade page

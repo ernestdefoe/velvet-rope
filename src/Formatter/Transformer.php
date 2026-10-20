@@ -25,7 +25,7 @@ class Transformer
     /** Tags that render an image. */
     private const IMAGES = ['IMG', 'HTML:IMG', 'HTML:PICTURE', 'HTML:SVG'];
 
-    /** Tags that render a link to somewhere. */
+    /** Links: never locked (for that, see ramon/guest-cta), and never mistaken for an embed. */
     private const LINKS = ['URL', 'LINK', 'EMAIL', 'HTML:A'];
 
     /** Tags that render a player or a frame. */
@@ -33,11 +33,6 @@ class Transformer
 
     /** Markup that renders nothing itself: start and end marks, ignored text. */
     private const SILENT = ['s', 'e', 'i'];
-
-    public function __construct(
-        private readonly string $forumHost = ''
-    ) {
-    }
 
     public function apply(string $xml, Verdict $verdict): string
     {
@@ -107,8 +102,7 @@ class Transformer
     {
         $elements = iterator_to_array((new DOMXPath($dom))->query('//*') ?: []);
 
-        // Innermost first, so a linked image is judged as an image before
-        // its link is.
+        // Innermost first: an image inside a link is locked, the link kept.
         foreach (array_reverse($elements) as $element) {
             if (! $element instanceof DOMElement || ! $element->parentNode) {
                 continue;
@@ -123,19 +117,6 @@ class Transformer
             $placeholder = $dom->createElement(ConfigureTags::LOCK);
             $placeholder->setAttribute('kind', $kind);
 
-            // A link keeps its words, unless the words are the address.
-            if ($kind === 'link') {
-                $text = trim($this->text($element));
-
-                if ($text !== '' && ! preg_match('#://|^www\.|@|^[\w.-]+\.[a-z]{2,}(/|$)#i', $text)) {
-                    foreach (iterator_to_array($element->childNodes) as $child) {
-                        if (! ($child instanceof DOMElement && in_array($child->nodeName, self::SILENT, true))) {
-                            $placeholder->appendChild($child);
-                        }
-                    }
-                }
-            }
-
             $element->parentNode->replaceChild($placeholder, $element);
         }
     }
@@ -149,7 +130,7 @@ class Transformer
         }
 
         if (in_array($name, self::LINKS, true)) {
-            return $this->internal($element) ? null : 'link';
+            return null;
         }
 
         if (in_array($name, self::IMAGES, true) || str_contains($name, 'IMAGE')) {
@@ -170,24 +151,6 @@ class Transformer
         }
 
         return null;
-    }
-
-    /** A link to a page of this forum is not "a link out". */
-    private function internal(DOMElement $element): bool
-    {
-        $url = trim($element->getAttribute('url') ?: $element->getAttribute('href'));
-
-        if ($url === '' || strtoupper($element->nodeName) === 'EMAIL') {
-            return false;
-        }
-
-        if (preg_match('#^/(?![/\\\\])#', $url) || str_starts_with($url, '#')) {
-            return true;
-        }
-
-        $host = parse_url($url, PHP_URL_HOST);
-
-        return $this->forumHost !== '' && is_string($host) && strcasecmp($host, $this->forumHost) === 0;
     }
 
     /** Keep the first `$chars` characters of text, cut at a word, then a "…". */

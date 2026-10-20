@@ -20,7 +20,7 @@ export interface Rule {
   upgradeUrl?: string;
 }
 
-const KINDS: LockKind[] = ['image', 'link', 'file', 'embed'];
+const KINDS: LockKind[] = ['image', 'file', 'embed'];
 const GUEST = '2';
 const ADMIN = '1';
 const MEMBER = 3;

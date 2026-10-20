@@ -30,16 +30,10 @@ function labelLocks(element: Element | undefined, gate: Gate | null) {
     icon.setAttribute('aria-hidden', 'true');
     lock.prepend(icon);
 
-    // A link that kept its words shows them; the prompt becomes its tooltip.
-    if (lock.textContent?.trim()) {
-      lock.title = text;
-      lock.setAttribute('aria-label', lock.textContent.trim() + ': ' + text);
-    } else {
-      const label = document.createElement('span');
-      label.className = 'GuestGate-lock-label';
-      label.textContent = text;
-      lock.append(label);
-    }
+    const label = document.createElement('span');
+    label.className = 'GuestGate-lock-label';
+    label.textContent = text;
+    lock.append(label);
 
     lock.setAttribute('role', 'button');
     lock.setAttribute('tabindex', '0');

@@ -30,7 +30,7 @@ class ConfigureTags
         $hide->template = '<div class="GuestGate-veil" style="--gg-lines:{@lines}" aria-hidden="true"></div>';
 
         $lock = $config->tags->add(self::LOCK);
-        $lock->attributes->add('kind')->filterChain->append('#regexp')->setRegexp('/^(?:image|link|file|embed)$/D');
+        $lock->attributes->add('kind')->filterChain->append('#regexp')->setRegexp('/^(?:image|file|embed)$/D');
         $lock->template = '<span class="GuestGate-lock" data-kind="{@kind}"><xsl:apply-templates/></span>';
 
         $more = $config->tags->add(self::MORE);

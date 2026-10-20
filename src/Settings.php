@@ -19,7 +19,7 @@ class Settings
 
     public const PERIODS = ['day' => 86400, 'week' => 604800, 'month' => 2592000];
 
-    public const KINDS = ['image', 'link', 'file', 'embed'];
+    public const KINDS = ['image', 'file', 'embed'];
 
     /** @var array{0: string, 1: list<Rule>}|null */
     private ?array $rules = null;

@@ -96,24 +96,25 @@ class RulesTest extends GateTestCase
     #[Test]
     public function chosen_media_is_locked_in_posts_guests_can_read()
     {
+        // "link" is not a kind: an old or hand-written setting naming it locks nothing.
         $this->rules([['tags' => [], 'readers' => [3], 'freePosts' => 1, 'lock' => ['image', 'link', 'embed']]]);
         $this->flushFormatter();
 
         $html = $this->read(3)[1]['contentHtml'];
 
         $this->assertStringNotContainsString('cdn.example.com', $html);
-        $this->assertStringNotContainsString(self::SECRET, $html, 'a bare address is dropped with its link');
-        $this->assertStringNotContainsString('example.com/x', $html);
-        $this->assertStringContainsString('the docs', $html, 'link words stay');
         $this->assertStringNotContainsString('youtu', $html);
-        $this->assertStringContainsString('href="/d/1"', $html, 'links within the forum stay');
         $this->assertSame(1, substr_count($html, 'data-kind="image"'));
-        $this->assertSame(2, substr_count($html, 'data-kind="link"'));
         $this->assertSame(1, substr_count($html, 'data-kind="embed"'));
+
+        // Links are never touched (that is ramon/guest-cta's job).
+        $this->assertStringNotContainsString('data-kind="link"', $html);
+        $this->assertStringContainsString('href="https://example.com/'.self::SECRET.'"', $html);
+        $this->assertStringContainsString('href="https://example.com/x"', $html);
+        $this->assertStringContainsString('href="/d/1"', $html);
 
         $member = $this->read(3, self::MEMBER)[1]['contentHtml'];
         $this->assertStringContainsString('<img src="https://cdn.example.com/a.png"', $member);
-        $this->assertStringContainsString('https://example.com/'.self::SECRET, $member);
     }
 
     #[Test]

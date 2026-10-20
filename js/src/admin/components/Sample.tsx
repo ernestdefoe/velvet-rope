@@ -16,13 +16,13 @@ export function cut(text: string, chars: number): string {
   return (/\s/.test(text.charAt(chars)) || space <= chars / 2 ? part : part.slice(0, space)).trimEnd();
 }
 
-function lock(kind: LockKind, gate: Gate, words?: string) {
+function lock(kind: LockKind, gate: Gate) {
   const text = t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${kind}`);
 
   return (
-    <span className="GuestGate-lock" data-kind={kind} title={words ? String(text) : undefined}>
+    <span className="GuestGate-lock" data-kind={kind}>
       <i className="fas fa-lock" aria-hidden="true" />
-      {words || <span className="GuestGate-lock-label">{text}</span>}
+      <span className="GuestGate-lock-label">{text}</span>
     </span>
   );
 }
@@ -35,13 +35,9 @@ function media(locked: LockKind[], gate: Gate) {
     <div className="GuestGate-sample-media">
       <p>
         {s('media_intro')}{' '}
-        {on('link') ? (
-          lock('link', gate, String(s('link_words')))
-        ) : (
-          <a href="#" onclick={(e: Event) => e.preventDefault()}>
-            {s('link_words')}
-          </a>
-        )}
+        <a href="#" onclick={(e: Event) => e.preventDefault()}>
+          {s('link_words')}
+        </a>
       </p>
       {on('image') ? (
         lock('image', gate)
