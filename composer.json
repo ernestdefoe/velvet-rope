@@ -1,6 +1,6 @@
 {
   "name": "ernestdefoe/velvet-rope",
-  "description": "Turn readers into members on Flarum 2: give guests a set number of free discussions per day, week or month, then show a lead-in and a sign-up prompt; blur replies, images, links, files and embeds for guests or chosen groups, per tag; with search-engine-friendly paywall markup.",
+  "description": "Turn readers into members on Flarum 2: give guests a set number of free discussions per day, week or month, then a lead-in and a sign-up prompt; hold back replies, images, attachments and embeds from guests or chosen groups, per tag; with the paywall structured data search engines ask for.",
   "keywords": [
     "flarum",
     "flarum-extension",
@@ -9,7 +9,8 @@
     "paywall",
     "blur",
     "metered",
-    "sign up"
+    "sign up",
+    "members only"
   ],
   "type": "flarum-extension",
   "license": "MIT",
@@ -44,7 +45,7 @@
       "category": "feature",
       "icon": {
         "name": "fas fa-door-open",
-        "backgroundColor": "#5b3a8c",
+        "backgroundColor": "#7a1f3d",
         "color": "#fff"
       },
       "optional-dependencies": [
