@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate;
+namespace ErnestDefoe\VelvetRope;
 
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Post\Post;
 
-class GuestGateServiceProvider extends AbstractServiceProvider
+class VelvetRopeServiceProvider extends AbstractServiceProvider
 {
     public function register(): void
     {

@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Api;
+namespace ErnestDefoe\VelvetRope\Api;
 
-use ErnestDefoe\GuestGate\Gate;
+use ErnestDefoe\VelvetRope\Gate;
 use Flarum\Api\Context;
 use Flarum\Api\Schema;
 use Flarum\Post\CommentPost;
 use Flarum\Post\Post;
 
 /**
- * `guestGate` on a post the reader gets less than all of: which prompt to show
+ * `velvetRope` on a post the reader gets less than all of: which prompt to show
  * and how much was held back. Absent on every post read in full, so members
  * with access pay nothing for it.
  */
@@ -28,7 +28,7 @@ class PostFields
     public function __invoke(): array
     {
         return [
-            Schema\Arr::make('guestGate')
+            Schema\Arr::make('velvetRope')
                 ->visible(fn (Post $post, Context $context) => $post instanceof CommentPost && $this->gate->forPost($context->getActor(), $post, $context->request)->gated())
                 ->get(fn (Post $post, Context $context) => $this->gate->forPost($context->getActor(), $post, $context->request)->toArray()),
         ];

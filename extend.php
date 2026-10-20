@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  *
  * Turn readers into members: a set number of free discussions for guests,
  * then a lead-in and a sign-up prompt; replies, images, links, files and
@@ -9,21 +9,21 @@
  * structured data so search engines can tell it from cloaking.
  */
 
-use ErnestDefoe\GuestGate\Api\DiscussionFields;
-use ErnestDefoe\GuestGate\Api\PostFields;
-use ErnestDefoe\GuestGate\Formatter\ConfigureTags;
-use ErnestDefoe\GuestGate\Formatter\GateContent;
-use ErnestDefoe\GuestGate\GuestGateServiceProvider;
-use ErnestDefoe\GuestGate\Http\TrackVisitor;
-use ErnestDefoe\GuestGate\Seo\AddToFofSeo;
-use ErnestDefoe\GuestGate\Seo\PaywallMarkup;
+use ErnestDefoe\VelvetRope\Api\DiscussionFields;
+use ErnestDefoe\VelvetRope\Api\PostFields;
+use ErnestDefoe\VelvetRope\Formatter\ConfigureTags;
+use ErnestDefoe\VelvetRope\Formatter\GateContent;
+use ErnestDefoe\VelvetRope\VelvetRopeServiceProvider;
+use ErnestDefoe\VelvetRope\Http\TrackVisitor;
+use ErnestDefoe\VelvetRope\Seo\AddToFofSeo;
+use ErnestDefoe\VelvetRope\Seo\PaywallMarkup;
 use Flarum\Api\Endpoint\Show;
 use Flarum\Api\Resource\DiscussionResource;
 use Flarum\Api\Resource\PostResource;
 use Flarum\Extend;
 use FoF\Seo\Event\PreparingPageMeta;
 
-$prefix = 'ernestdefoe-guest-gate.';
+$prefix = 'ernestdefoe-velvet-rope.';
 
 return [
     (new Extend\Frontend('forum'))
@@ -38,7 +38,7 @@ return [
     new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\ServiceProvider())
-        ->register(GuestGateServiceProvider::class),
+        ->register(VelvetRopeServiceProvider::class),
 
     (new Extend\Middleware('forum'))->add(TrackVisitor::class),
     (new Extend\Middleware('api'))->add(TrackVisitor::class),

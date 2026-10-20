@@ -1,13 +1,13 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Api;
+namespace ErnestDefoe\VelvetRope\Api;
 
-use ErnestDefoe\GuestGate\Gate;
-use ErnestDefoe\GuestGate\Settings;
+use ErnestDefoe\VelvetRope\Gate;
+use ErnestDefoe\VelvetRope\Settings;
 use Flarum\Api\Context;
 use Flarum\Api\Endpoint\Show;
 use Flarum\Api\Resource\DiscussionResource;
@@ -42,7 +42,7 @@ class DiscussionFields
     public function __invoke(): array
     {
         return [
-            Schema\Arr::make('guestGateMeter')
+            Schema\Arr::make('velvetRopeMeter')
                 ->visible(fn (Discussion $discussion, Context $context) => $context->showing(DiscussionResource::class)
                     && $context->getActor()->isGuest()
                     && $this->gate->meterFor($context->getActor(), (int) $discussion->id, $discussion) !== null)

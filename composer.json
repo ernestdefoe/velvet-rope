@@ -1,5 +1,5 @@
 {
-  "name": "ernestdefoe/guest-gate",
+  "name": "ernestdefoe/velvet-rope",
   "description": "Turn readers into members on Flarum 2: give guests a set number of free discussions per day, week or month, then show a lead-in and a sign-up prompt; blur replies, images, links, files and embeds for guests or chosen groups, per tag; with search-engine-friendly paywall markup.",
   "keywords": [
     "flarum",
@@ -12,17 +12,17 @@
     "sign up"
   ],
   "type": "flarum-extension",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "ernestdefoe",
       "email": "ernestdefoe@gmail.com"
     }
   ],
-  "homepage": "https://github.com/ernestdefoe/guest-gate",
+  "homepage": "https://github.com/ernestdefoe/velvet-rope",
   "support": {
-    "issues": "https://github.com/ernestdefoe/guest-gate/issues",
-    "source": "https://github.com/ernestdefoe/guest-gate"
+    "issues": "https://github.com/ernestdefoe/velvet-rope/issues",
+    "source": "https://github.com/ernestdefoe/velvet-rope"
   },
   "require": {
     "php": "^8.3",
@@ -30,17 +30,17 @@
   },
   "autoload": {
     "psr-4": {
-      "ErnestDefoe\\GuestGate\\": "src/"
+      "ErnestDefoe\\VelvetRope\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "ErnestDefoe\\GuestGate\\Tests\\": "tests/"
+      "ErnestDefoe\\VelvetRope\\Tests\\": "tests/"
     }
   },
   "extra": {
     "flarum-extension": {
-      "title": "Guest Gate",
+      "title": "Velvet Rope",
       "category": "feature",
       "icon": {
         "name": "fas fa-door-open",

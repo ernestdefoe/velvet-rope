@@ -1,17 +1,17 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Http;
+namespace ErnestDefoe\VelvetRope\Http;
 
-use ErnestDefoe\GuestGate\Crawler;
-use ErnestDefoe\GuestGate\Meter;
-use ErnestDefoe\GuestGate\Settings;
-use ErnestDefoe\GuestGate\TagLookup;
-use ErnestDefoe\GuestGate\Visitor;
-use ErnestDefoe\GuestGate\Visitors;
+use ErnestDefoe\VelvetRope\Crawler;
+use ErnestDefoe\VelvetRope\Meter;
+use ErnestDefoe\VelvetRope\Settings;
+use ErnestDefoe\VelvetRope\TagLookup;
+use ErnestDefoe\VelvetRope\Visitor;
+use ErnestDefoe\VelvetRope\Visitors;
 use Flarum\Http\CookieFactory;
 use Flarum\Http\RequestUtil;
 use Illuminate\Contracts\Cache\Repository as Cache;
@@ -30,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
  */
 class TrackVisitor implements MiddlewareInterface
 {
-    public const COOKIE = 'guest_gate';
+    public const COOKIE = 'velvet_rope';
 
     public function __construct(
         protected Settings $settings,
@@ -88,7 +88,7 @@ class TrackVisitor implements MiddlewareInterface
      */
     protected function byAddress(Request $request): array
     {
-        $key = 'ernestdefoe-guest-gate.ip.'.substr(hash_hmac('sha256', (string) $request->getAttribute('ipAddress'), $this->settings->secret()), 0, 32);
+        $key = 'ernestdefoe-velvet-rope.ip.'.substr(hash_hmac('sha256', (string) $request->getAttribute('ipAddress'), $this->settings->secret()), 0, 32);
         $entry = $this->cache->get($key);
         $fresh = ! is_array($entry) || ! is_int($entry['start'] ?? null) || $entry['start'] + $this->settings->meterPeriod() <= time();
 

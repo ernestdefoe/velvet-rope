@@ -1,6 +1,6 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
 use PHPUnit\Framework\Attributes\Test;
 
@@ -26,10 +26,10 @@ class MeterTest extends GateTestCase
         $this->assertSame(2, substr_count($this->readAll(2), self::SECRET));
 
         $posts = $this->read(4);
-        $this->assertSame(['mode' => 'lead', 'reason' => 'meter'], $posts[1]['guestGate']);
+        $this->assertSame(['mode' => 'lead', 'reason' => 'meter'], $posts[1]['velvetRope']);
         $this->assertStringContainsString('Opening words', $posts[1]['contentHtml']);
         $this->assertLessThan(120, strlen($posts[1]['contentHtml']), 'only the lead-in');
-        $this->assertSame(['mode' => 'hide', 'reason' => 'meter'], $posts[2]['guestGate']);
+        $this->assertSame(['mode' => 'hide', 'reason' => 'meter'], $posts[2]['velvetRope']);
         $this->assertStringNotContainsString(self::SECRET, json_encode($posts));
 
         // Going back to a discussion already counted is free.
@@ -41,17 +41,17 @@ class MeterTest extends GateTestCase
     {
         $this->meter(2, ['meter_warn' => '1', 'meter_period' => 'week']);
 
-        $first = $this->json($this->show(1))['data']['attributes']['guestGateMeter'];
+        $first = $this->json($this->show(1))['data']['attributes']['velvetRopeMeter'];
         $this->assertSame(['limit' => 2, 'remaining' => 1, 'counted' => true, 'warn' => 1, 'period' => 'week'], $first);
 
         $this->show(2);
-        $third = $this->json($this->show(4))['data']['attributes']['guestGateMeter'];
+        $third = $this->json($this->show(4))['data']['attributes']['velvetRopeMeter'];
         $this->assertSame(0, $third['remaining']);
         $this->assertFalse($third['counted']);
 
         // Lists carry nothing; members carry nothing.
-        $this->assertStringNotContainsString('guestGateMeter', (string) $this->get('/api/discussions')->getBody());
-        $this->assertStringNotContainsString('guestGateMeter', (string) $this->show(1, self::MEMBER)->getBody());
+        $this->assertStringNotContainsString('velvetRopeMeter', (string) $this->get('/api/discussions')->getBody());
+        $this->assertStringNotContainsString('velvetRopeMeter', (string) $this->show(1, self::MEMBER)->getBody());
     }
 
     #[Test]
@@ -62,14 +62,14 @@ class MeterTest extends GateTestCase
         $page = $this->get('/d/1');
         $this->assertSame(200, $page->getStatusCode());
         $this->assertStringContainsString(self::SECRET, (string) $page->getBody());
-        $this->assertNotSame([], array_filter(array_keys($this->jar), fn ($name) => str_ends_with($name, 'guest_gate')));
+        $this->assertNotSame([], array_filter(array_keys($this->jar), fn ($name) => str_ends_with($name, 'velvet_rope')));
 
         // Its own data, loaded by the page script, is the same discussion: free.
         $this->assertSame(2, substr_count($this->readAll(1), self::SECRET));
 
         $other = (string) $this->get('/d/2')->getBody();
         $this->assertStringNotContainsString(self::SECRET, $other);
-        $this->assertStringContainsString('GuestGate-veil', $other);
+        $this->assertStringContainsString('VelvetRope-veil', $other);
     }
 
     #[Test]
@@ -78,7 +78,7 @@ class MeterTest extends GateTestCase
         $this->meter(1);
 
         $this->readAll(1);
-        $name = array_key_first(array_filter($this->jar, fn ($v, $k) => str_ends_with($k, 'guest_gate'), ARRAY_FILTER_USE_BOTH));
+        $name = array_key_first(array_filter($this->jar, fn ($v, $k) => str_ends_with($k, 'velvet_rope'), ARRAY_FILTER_USE_BOTH));
         [$start, $ids, $sig] = explode('.', $this->jar[$name]);
 
         // Claim discussions 2 and 4 were read too, keeping the old signature,
@@ -97,7 +97,7 @@ class MeterTest extends GateTestCase
         $this->meter(1, ['meter_period' => 'day']);
 
         $old = (string) (time() - 90000);
-        $this->jar = ['flarum_guest_gate' => "$old.1.".substr(hash_hmac('sha256', "$old.1", str_repeat('k', 64)), 0, 32)];
+        $this->jar = ['flarum_velvet_rope' => "$old.1.".substr(hash_hmac('sha256', "$old.1", str_repeat('k', 64)), 0, 32)];
         $this->jarFor = null;
 
         $this->assertSame(2, substr_count($this->readAll(2), self::SECRET));
@@ -133,11 +133,11 @@ class MeterTest extends GateTestCase
         $this->rules([['tags' => [], 'readers' => [3], 'freePosts' => 1]]);
 
         $within = $this->read(1);
-        $this->assertArrayNotHasKey('guestGate', $within[1]);
-        $this->assertSame('hide', $within[2]['guestGate']['mode']);
+        $this->assertArrayNotHasKey('velvetRope', $within[1]);
+        $this->assertSame('hide', $within[2]['velvetRope']['mode']);
 
         $after = $this->read(2);
-        $this->assertSame(['mode' => 'lead', 'reason' => 'meter'], $after[1]['guestGate']);
+        $this->assertSame(['mode' => 'lead', 'reason' => 'meter'], $after[1]['velvetRope']);
     }
 
     #[Test]

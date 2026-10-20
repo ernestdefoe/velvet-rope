@@ -1,4 +1,4 @@
-/** A post's `guestGate` attribute: what this reader was not sent, and why. */
+/** A post's `velvetRope` attribute: what this reader was not sent, and why. */
 export interface Gate {
   mode: 'lock' | 'lead' | 'hide';
   reason: 'guest' | 'meter' | 'confirm' | 'member';
@@ -7,7 +7,7 @@ export interface Gate {
   generic?: boolean;
 }
 
-/** A discussion's `guestGateMeter` attribute, for metered guests. */
+/** A discussion's `velvetRopeMeter` attribute, for metered guests. */
 export interface MeterInfo {
   limit: number;
   remaining: number;

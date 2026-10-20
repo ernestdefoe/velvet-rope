@@ -1,6 +1,6 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
 use Flarum\Post\CommentPost;
 use Flarum\Subscriptions\Notification\NewPostBlueprint;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Test;
  */
 class EmailTest extends GateTestCase
 {
-    protected array $enable = ['flarum-tags', 'flarum-markdown', 'flarum-subscriptions', 'ernestdefoe-guest-gate'];
+    protected array $enable = ['flarum-tags', 'flarum-markdown', 'flarum-subscriptions', 'ernestdefoe-velvet-rope'];
 
     /** What NotificationMailer does: share the recipient and blueprint, render the email. */
     protected function email(int $postId, int $recipient): string

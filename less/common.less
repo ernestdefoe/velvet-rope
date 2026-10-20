@@ -2,7 +2,7 @@
 // own variables, so it fits stock Flarum, dark mode and themes alike.
 
 // A hidden reply: lines of blurred "text", drawn without any text at all.
-.GuestGate-veil {
+.VelvetRope-veil {
   --gg-line: color-mix(in srgb, var(--muted-color) 35%, transparent);
   height: ~"calc(max(var(--gg-lines, 3), 2) * 1.6em - 0.85em)";
   margin: 4px 0 0;
@@ -20,17 +20,17 @@
 }
 
 // A preview cut short: its last lines fade out into the prompt.
-.GuestGate-post--lead .Post-body {
+.VelvetRope-post--lead .Post-body {
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
   mask-image: linear-gradient(to bottom, #000 55%, transparent);
 }
 
-.GuestGate-more {
+.VelvetRope-more {
   color: var(--muted-color);
 }
 
 // Locked media, in place of an image, link, file or embed.
-.GuestGate-lock {
+.VelvetRope-lock {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -71,12 +71,12 @@
   }
 }
 
-.GuestGate-lock-label {
+.VelvetRope-lock-label {
   font-weight: 600;
 }
 
 // The prompt: a card in place of what was held back.
-.GuestGate-prompt {
+.VelvetRope-prompt {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -87,51 +87,51 @@
   background: var(--control-bg);
   color: var(--text-color);
 
-  .GuestGate-post--lead & {
+  .VelvetRope-post--lead & {
     margin-top: 4px;
   }
 }
 
-.GuestGate-prompt-icon {
+.VelvetRope-prompt-icon {
   flex: 0 0 auto;
   font-size: 1.4em;
   color: var(--primary-color);
 }
 
-.GuestGate-prompt-body {
+.VelvetRope-prompt-body {
   flex: 1 1 240px;
   min-width: 0;
 }
 
-.GuestGate-prompt-title {
+.VelvetRope-prompt-title {
   margin: 0;
   font-size: 1.05em;
   font-weight: 700;
   line-height: 1.35;
 }
 
-.GuestGate-prompt-text {
+.VelvetRope-prompt-text {
   margin: 4px 0 0;
   color: var(--muted-color);
   line-height: 1.5;
 }
 
-.GuestGate-prompt-actions {
+.VelvetRope-prompt-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
 // Under each hidden reply: one line, smaller.
-.GuestGate-prompt--compact {
+.VelvetRope-prompt--compact {
   margin-top: 10px;
   padding: 10px 14px;
 
-  .GuestGate-prompt-icon {
+  .VelvetRope-prompt-icon {
     font-size: 1em;
   }
 
-  .GuestGate-prompt-title {
+  .VelvetRope-prompt-title {
     font-size: 0.95em;
   }
 
@@ -142,11 +142,11 @@
 }
 
 @media @phone {
-  .GuestGate-prompt {
+  .VelvetRope-prompt {
     padding: 14px 16px;
   }
 
-  .GuestGate-prompt-actions {
+  .VelvetRope-prompt-actions {
     width: 100%;
 
     .Button {
@@ -154,7 +154,7 @@
     }
   }
 
-  .GuestGate-prompt--compact .GuestGate-prompt-body {
+  .VelvetRope-prompt--compact .VelvetRope-prompt-body {
     flex-basis: calc(100% - 40px);
   }
 }

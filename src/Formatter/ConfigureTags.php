@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Formatter;
+namespace ErnestDefoe\VelvetRope\Formatter;
 
 use s9e\TextFormatter\Configurator;
 
@@ -15,28 +15,28 @@ use s9e\TextFormatter\Configurator;
  */
 class ConfigureTags
 {
-    public const HIDE = 'GUESTGATE-HIDE';
+    public const HIDE = 'VELVETROPE-HIDE';
 
-    public const LOCK = 'GUESTGATE-LOCK';
+    public const LOCK = 'VELVETROPE-LOCK';
 
-    public const MORE = 'GUESTGATE-MORE';
+    public const MORE = 'VELVETROPE-MORE';
 
-    public const WALL = 'GUESTGATE-WALL';
+    public const WALL = 'VELVETROPE-WALL';
 
     public function __invoke(Configurator $config): void
     {
         $hide = $config->tags->add(self::HIDE);
         $hide->attributes->add('lines')->filterChain->append('#uint');
-        $hide->template = '<div class="GuestGate-veil" style="--gg-lines:{@lines}" aria-hidden="true"></div>';
+        $hide->template = '<div class="VelvetRope-veil" style="--gg-lines:{@lines}" aria-hidden="true"></div>';
 
         $lock = $config->tags->add(self::LOCK);
         $lock->attributes->add('kind')->filterChain->append('#regexp')->setRegexp('/^(?:image|file|embed)$/D');
-        $lock->template = '<span class="GuestGate-lock" data-kind="{@kind}"><xsl:apply-templates/></span>';
+        $lock->template = '<span class="VelvetRope-lock" data-kind="{@kind}"><xsl:apply-templates/></span>';
 
         $more = $config->tags->add(self::MORE);
-        $more->template = '<span class="GuestGate-more" aria-hidden="true">…</span>';
+        $more->template = '<span class="VelvetRope-more" aria-hidden="true">…</span>';
 
         $wall = $config->tags->add(self::WALL);
-        $wall->template = '<div class="GuestGate-paywalled"><xsl:apply-templates/></div>';
+        $wall->template = '<div class="VelvetRope-paywalled"><xsl:apply-templates/></div>';
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Seo;
+namespace ErnestDefoe\VelvetRope\Seo;
 
-use ErnestDefoe\GuestGate\Gate;
+use ErnestDefoe\VelvetRope\Gate;
 use Flarum\Extension\ExtensionManager;
 use Flarum\Frontend\Document;
 use Flarum\Http\RequestUtil;
@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Paywall structured data on a discussion page whose content is gated for
  * guests, as Google asks of metered and lead-in content: the page says it
- * isn't free, and `.GuestGate-paywalled` marks the parts that a search engine
+ * isn't free, and `.VelvetRope-paywalled` marks the parts that a search engine
  * (or a guest with free discussions left) sees and others don't. With that
  * markup the difference is a paywall, not cloaking.
  *
@@ -24,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class PaywallMarkup
 {
-    public const SELECTOR = '.GuestGate-paywalled';
+    public const SELECTOR = '.VelvetRope-paywalled';
 
     public function __construct(
         protected Gate $gate,

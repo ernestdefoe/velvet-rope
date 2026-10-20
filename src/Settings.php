@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate;
+namespace ErnestDefoe\VelvetRope;
 
 use Flarum\Settings\SettingsRepositoryInterface;
 
@@ -15,7 +15,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
  */
 class Settings
 {
-    public const PREFIX = 'ernestdefoe-guest-gate.';
+    public const PREFIX = 'ernestdefoe-velvet-rope.';
 
     public const PERIODS = ['day' => 86400, 'week' => 604800, 'month' => 2592000];
 

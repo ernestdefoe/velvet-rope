@@ -1,8 +1,8 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
-use ErnestDefoe\GuestGate\Crawler;
+use ErnestDefoe\VelvetRope\Crawler;
 use PHPUnit\Framework\Attributes\Test;
 
 /**
@@ -35,14 +35,14 @@ class CrawlerTest extends GateTestCase
 
         $posts = $this->read(1, null, ['User-Agent' => self::GOOGLEBOT]);
         $this->assertStringContainsString(self::SECRET, $posts[2]['contentHtml']);
-        $this->assertStringContainsString('<div class="GuestGate-paywalled">', $posts[2]['contentHtml']);
-        $this->assertArrayNotHasKey('guestGate', $posts[2]);
-        $this->assertStringNotContainsString('GuestGate-paywalled', $posts[1]['contentHtml'], 'the free first post is not marked');
+        $this->assertStringContainsString('<div class="VelvetRope-paywalled">', $posts[2]['contentHtml']);
+        $this->assertArrayNotHasKey('velvetRope', $posts[2]);
+        $this->assertStringNotContainsString('VelvetRope-paywalled', $posts[1]['contentHtml'], 'the free first post is not marked');
 
         $page = (string) $this->get('/d/1', null, [], ['User-Agent' => self::GOOGLEBOT])->getBody();
         $this->assertStringContainsString(self::SECRET, $page);
         $this->assertStringContainsString('"isAccessibleForFree":false', $page);
-        $this->assertStringContainsString('"cssSelector":".GuestGate-paywalled"', $page);
+        $this->assertStringContainsString('"cssSelector":".VelvetRope-paywalled"', $page);
 
         $this->assertSame(1, count(array_unique($this->lookups)), 'one address, looked up once and cached');
         $this->assertLessThanOrEqual(1, count($this->lookups));
@@ -98,7 +98,7 @@ class CrawlerTest extends GateTestCase
         $this->meter(1);
 
         $posts = $this->read(1);
-        $this->assertStringContainsString('<div class="GuestGate-paywalled">', $posts[2]['contentHtml']);
+        $this->assertStringContainsString('<div class="VelvetRope-paywalled">', $posts[2]['contentHtml']);
         $this->assertStringContainsString(self::SECRET, $posts[2]['contentHtml']);
         $this->assertStringContainsString('"isAccessibleForFree":false', (string) $this->get('/d/1')->getBody());
     }

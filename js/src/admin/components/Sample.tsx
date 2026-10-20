@@ -20,9 +20,9 @@ function lock(kind: LockKind, gate: Gate) {
   const text = t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${kind}`);
 
   return (
-    <span className="GuestGate-lock" data-kind={kind}>
+    <span className="VelvetRope-lock" data-kind={kind}>
       <i className="fas fa-lock" aria-hidden="true" />
-      <span className="GuestGate-lock-label">{text}</span>
+      <span className="VelvetRope-lock-label">{text}</span>
     </span>
   );
 }
@@ -32,7 +32,7 @@ function media(locked: LockKind[], gate: Gate) {
   const on = (k: LockKind) => locked.includes(k);
 
   return (
-    <div className="GuestGate-sample-media">
+    <div className="VelvetRope-sample-media">
       <p>
         {s('media_intro')}{' '}
         <a href="#" onclick={(e: Event) => e.preventDefault()}>
@@ -42,21 +42,21 @@ function media(locked: LockKind[], gate: Gate) {
       {on('image') ? (
         lock('image', gate)
       ) : (
-        <div className="GuestGate-sample-image">
+        <div className="VelvetRope-sample-image">
           <Icon name="far fa-image" />
         </div>
       )}
       {on('embed') ? (
         lock('embed', gate)
       ) : (
-        <div className="GuestGate-sample-embed">
+        <div className="VelvetRope-sample-embed">
           <Icon name="fas fa-play" />
         </div>
       )}
       {on('file') ? (
         lock('file', gate)
       ) : (
-        <span className="GuestGate-sample-file">
+        <span className="VelvetRope-sample-file">
           <Icon name="fas fa-file-pdf" /> {s('file_name')}
         </span>
       )}
@@ -82,13 +82,13 @@ export function samplePost({ number, gate, locked, chars = 0, meter, compact = f
 
   let body;
   if (mode === 'hide') {
-    body = <div className="GuestGate-veil" style={{ '--gg-lines': 3 } as any} aria-hidden="true" />;
+    body = <div className="VelvetRope-veil" style={{ '--gg-lines': 3 } as any} aria-hidden="true" />;
   } else if (mode === 'lead') {
     body = (
       <p>
         {cut(text, chars)}
         {chars < text.length && (
-          <span className="GuestGate-more" aria-hidden="true">
+          <span className="VelvetRope-more" aria-hidden="true">
             …
           </span>
         )}
@@ -99,10 +99,10 @@ export function samplePost({ number, gate, locked, chars = 0, meter, compact = f
   }
 
   return (
-    <div className={classList('GuestGate-sample-post', 'Post', 'CommentPost', gate && ['GuestGate-post', `GuestGate-post--${mode}`])}>
-      <div className="GuestGate-sample-author">
-        <span className="GuestGate-sample-avatar" />
-        <span className="GuestGate-sample-name">{s('author', { number })}</span>
+    <div className={classList('VelvetRope-sample-post', 'Post', 'CommentPost', gate && ['VelvetRope-post', `VelvetRope-post--${mode}`])}>
+      <div className="VelvetRope-sample-author">
+        <span className="VelvetRope-sample-avatar" />
+        <span className="VelvetRope-sample-name">{s('author', { number })}</span>
       </div>
       <div className="Post-body">{body}</div>
       {gate && mode !== 'lock' && <GatePrompt gate={gate} meter={meter} compact={compact} preview />}
@@ -112,11 +112,11 @@ export function samplePost({ number, gate, locked, chars = 0, meter, compact = f
 
 export function frame(title: any, posts: any[]) {
   return (
-    <div className="GuestGate-preview">
-      <div className="GuestGate-preview-title">
+    <div className="VelvetRope-preview">
+      <div className="VelvetRope-preview-title">
         <Icon name="far fa-eye" /> {title}
       </div>
-      <div className="GuestGate-preview-stream">{posts}</div>
+      <div className="VelvetRope-preview-stream">{posts}</div>
     </div>
   );
 }

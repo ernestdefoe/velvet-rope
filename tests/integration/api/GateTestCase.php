@@ -1,6 +1,6 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
 use Carbon\Carbon;
 use Dflydev\FigCookies\SetCookie;
@@ -27,12 +27,12 @@ abstract class GateTestCase extends TestCase
     protected const UNCONFIRMED = 5;
     protected const VIP_GROUP = 5;
 
-    protected const P = 'ernestdefoe-guest-gate.';
+    protected const P = 'ernestdefoe-velvet-rope.';
 
     /** Words only a reader with access may ever receive. */
     protected const SECRET = 'Zanzibar';
 
-    protected array $enable = ['flarum-tags', 'flarum-markdown', 'ernestdefoe-guest-gate'];
+    protected array $enable = ['flarum-tags', 'flarum-markdown', 'ernestdefoe-velvet-rope'];
 
     protected function setUp(): void
     {

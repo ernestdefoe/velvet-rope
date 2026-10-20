@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate;
+namespace ErnestDefoe\VelvetRope;
 
 /**
  * A guest's free discussions for the current period, carried in a signed

@@ -1,6 +1,6 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
 use PHPUnit\Framework\Attributes\Test;
 
@@ -14,12 +14,12 @@ class RulesTest extends GateTestCase
     {
         $posts = $this->read(1);
         $this->assertStringContainsString('Opening words', $posts[1]['contentHtml']);
-        $this->assertArrayNotHasKey('guestGate', $posts[1]);
+        $this->assertArrayNotHasKey('velvetRope', $posts[1]);
 
         foreach ([2, 3] as $n) {
             $this->assertStringNotContainsString(self::SECRET, $posts[$n]['contentHtml']);
-            $this->assertStringContainsString('GuestGate-veil', $posts[$n]['contentHtml']);
-            $this->assertSame(['mode' => 'hide', 'reason' => 'guest'], $posts[$n]['guestGate']);
+            $this->assertStringContainsString('VelvetRope-veil', $posts[$n]['contentHtml']);
+            $this->assertSame(['mode' => 'hide', 'reason' => 'guest'], $posts[$n]['velvetRope']);
         }
 
         $this->assertStringNotContainsString(self::SECRET, json_encode($posts));
@@ -31,8 +31,8 @@ class RulesTest extends GateTestCase
         $body = $this->readAll(1, self::MEMBER);
 
         $this->assertSame(2, substr_count($body, self::SECRET));
-        $this->assertStringNotContainsString('guestGate', $body);
-        $this->assertStringNotContainsString('GuestGate', $body);
+        $this->assertStringNotContainsString('velvetRope', $body);
+        $this->assertStringNotContainsString('VelvetRope', $body);
     }
 
     #[Test]
@@ -40,7 +40,7 @@ class RulesTest extends GateTestCase
     {
         $posts = $this->read(1, self::UNCONFIRMED);
 
-        $this->assertSame('confirm', $posts[2]['guestGate']['reason']);
+        $this->assertSame('confirm', $posts[2]['velvetRope']['reason']);
         $this->assertStringNotContainsString(self::SECRET, $posts[2]['contentHtml']);
     }
 
@@ -53,9 +53,9 @@ class RulesTest extends GateTestCase
         ]);
 
         $member = $this->read(2, self::MEMBER);
-        $this->assertSame(['mode' => 'hide', 'reason' => 'member', 'upgradeUrl' => '/store'], $member[3]['guestGate']);
+        $this->assertSame(['mode' => 'hide', 'reason' => 'member', 'upgradeUrl' => '/store'], $member[3]['velvetRope']);
         $this->assertStringNotContainsString(self::SECRET, $member[3]['contentHtml']);
-        $this->assertArrayNotHasKey('guestGate', $member[2], 'their own reply');
+        $this->assertArrayNotHasKey('velvetRope', $member[2], 'their own reply');
 
         $this->assertSame(2, substr_count($this->readAll(2, self::VIP), self::SECRET), 'the group reads it all');
 
@@ -64,7 +64,7 @@ class RulesTest extends GateTestCase
 
         // A guest is asked to sign up, never shown the members' upgrade link.
         $guest = $this->read(2);
-        $this->assertSame(['mode' => 'hide', 'reason' => 'guest'], $guest[3]['guestGate']);
+        $this->assertSame(['mode' => 'hide', 'reason' => 'guest'], $guest[3]['velvetRope']);
     }
 
     #[Test]
@@ -73,10 +73,10 @@ class RulesTest extends GateTestCase
         $this->rules([['tags' => [], 'readers' => [self::VIP_GROUP], 'freePosts' => 0]]);
 
         $posts = $this->read(1, self::MEMBER);
-        $this->assertArrayNotHasKey('guestGate', $posts[2], 'MEMBER wrote post 2');
+        $this->assertArrayNotHasKey('velvetRope', $posts[2], 'MEMBER wrote post 2');
         $this->assertStringContainsString(self::SECRET, $posts[2]['contentHtml']);
-        $this->assertSame('hide', $posts[3]['guestGate']['mode']);
-        $this->assertSame('hide', $posts[1]['guestGate']['mode'], 'no free posts');
+        $this->assertSame('hide', $posts[3]['velvetRope']['mode']);
+        $this->assertSame('hide', $posts[1]['velvetRope']['mode'], 'no free posts');
     }
 
     #[Test]
@@ -85,10 +85,10 @@ class RulesTest extends GateTestCase
         $this->rules([['tags' => [], 'readers' => [3], 'freePosts' => 1, 'preview' => 12]]);
 
         $posts = $this->read(1);
-        $this->assertSame('lead', $posts[2]['guestGate']['mode']);
+        $this->assertSame('lead', $posts[2]['velvetRope']['mode']);
         $this->assertStringContainsString('A reply that', $posts[2]['contentHtml']);
         $this->assertStringNotContainsString(self::SECRET, $posts[2]['contentHtml']);
-        $this->assertStringContainsString('GuestGate-more', $posts[2]['contentHtml']);
+        $this->assertStringContainsString('VelvetRope-more', $posts[2]['contentHtml']);
         // Cut inside markup: the HTML stays well formed and the bold word is gone.
         $this->assertStringNotContainsString(self::SECRET, $posts[3]['contentHtml']);
     }
@@ -144,7 +144,7 @@ class RulesTest extends GateTestCase
 
         $one = (string) $this->get('/api/posts/12')->getBody();
         $this->assertStringNotContainsString(self::SECRET, $one);
-        $this->assertStringContainsString('guestGate', $one);
+        $this->assertStringContainsString('velvetRope', $one);
 
         // Search results carry the most relevant post.
         $search = (string) $this->get('/api/discussions', null, ['filter' => ['q' => self::SECRET], 'include' => 'mostRelevantPost'])->getBody();

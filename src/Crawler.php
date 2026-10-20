@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate;
+namespace ErnestDefoe\VelvetRope;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Psr\Http\Message\ServerRequestInterface;
@@ -70,14 +70,14 @@ class Crawler
             return false;
         }
 
-        $key = 'ernestdefoe-guest-gate.crawler.'.md5($ip);
+        $key = 'ernestdefoe-velvet-rope.crawler.'.md5($ip);
         $known = $this->cache->get($key);
 
         if (is_string($known)) {
             return self::matches($known, $suffixes);
         }
 
-        $budget = 'ernestdefoe-guest-gate.crawler-lookups.'.intdiv(time(), 60);
+        $budget = 'ernestdefoe-velvet-rope.crawler-lookups.'.intdiv(time(), 60);
         $this->cache->add($budget, 0, 120);
 
         if ((int) $this->cache->increment($budget) > self::LOOKUPS_PER_MINUTE) {

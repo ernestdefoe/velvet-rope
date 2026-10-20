@@ -58,8 +58,8 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
 
   view() {
     return (
-      <div className="GuestGate-rules">
-        {this.rules.length === 0 && <p className="GuestGate-rules-empty">{a('empty')}</p>}
+      <div className="VelvetRope-rules">
+        {this.rules.length === 0 && <p className="VelvetRope-rules-empty">{a('empty')}</p>}
         {this.rules.map((rule, i) => this.card(rule, i))}
         <Button className="Button" icon="fas fa-plus" onclick={() => this.add()}>
           {a('add')}
@@ -75,16 +75,16 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
     return (
       <div
         key={keyOf(rule)}
-        className={`GuestGate-rule ${this.dragging === i ? 'is-dragging' : ''}`}
+        className={`VelvetRope-rule ${this.dragging === i ? 'is-dragging' : ''}`}
         ondragover={(e: DragEvent) => e.preventDefault()}
         ondrop={(e: DragEvent) => {
           e.preventDefault();
           this.move(this.dragging, i);
         }}
       >
-        <div className="GuestGate-rule-head">
+        <div className="VelvetRope-rule-head">
           <span
-            className="GuestGate-rule-grip"
+            className="VelvetRope-rule-grip"
             draggable="true"
             title={a('drag')}
             ondragstart={(e: DragEvent) => {
@@ -100,14 +100,14 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
           <Button className="Button Button--icon Button--link" icon="far fa-trash-alt" aria-label={a('delete')} onclick={() => this.remove(i)} />
         </div>
 
-        <div className="GuestGate-rule-grid">
-          <div className="GuestGate-rule-fields">
+        <div className="VelvetRope-rule-grid">
+          <div className="VelvetRope-rule-fields">
             {tagsOn ? <FormGroup type="flarum-tags.select-tags" label={a('tags')} help={a('tags_help')} stream={this.tagStreams[i]} /> : null}
 
             <div className="Form-group">
               <label>{a('readers')}</label>
               <p className="helpText">{a('readers_help')}</p>
-              <div className="GuestGate-checks">
+              <div className="VelvetRope-checks">
                 {groups.map((group) =>
                   this.check(rule.readers.includes(Number(group.id())), group.namePlural(), (on) =>
                     this.toggle(rule, 'readers', Number(group.id()), on)
@@ -116,7 +116,7 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
               </div>
             </div>
 
-            <div className="GuestGate-rule-numbers">
+            <div className="VelvetRope-rule-numbers">
               {this.number(rule, 'freePosts', 0, 50)}
               {this.number(rule, 'preview', 0, 2000)}
             </div>
@@ -124,7 +124,7 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
             <div className="Form-group">
               <label>{a('lock')}</label>
               <p className="helpText">{a('lock_help')}</p>
-              <div className="GuestGate-checks">
+              <div className="VelvetRope-checks">
                 {KINDS.map((kind) => this.check(rule.lock.includes(kind), a(`lock_${kind}`), (on) => this.toggle(rule, 'lock', kind, on)))}
               </div>
             </div>

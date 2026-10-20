@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "@ernestdefoe/guest-gate",
+  "name": "@ernestdefoe/velvet-rope",
   "version": "1.0.0",
-  "description": "Guest Gate for Flarum 2",
+  "description": "Velvet Rope for Flarum 2",
   "devDependencies": {
     "@flarum/prettier-config": "^1.0.0",
     "flarum-tsconfig": "^2.0.0",

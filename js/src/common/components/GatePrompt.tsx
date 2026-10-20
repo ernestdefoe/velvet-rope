@@ -31,13 +31,13 @@ export default class GatePrompt extends Component<GatePromptAttrs> {
     const reason = this.attrs.gate.reason;
 
     return (
-      <div className={classList('GuestGate-prompt', `GuestGate-prompt--${reason}`, compact && 'GuestGate-prompt--compact')} role="note">
-        <Icon name={reason === 'member' ? 'fas fa-crown' : 'fas fa-lock'} className="GuestGate-prompt-icon" />
-        <div className="GuestGate-prompt-body">
-          <h4 className="GuestGate-prompt-title">{this.title()}</h4>
-          {!compact && <p className="GuestGate-prompt-text">{t(`lib.prompt.${reason}_text`, { email: app.session?.user?.email?.() || '' })}</p>}
+      <div className={classList('VelvetRope-prompt', `VelvetRope-prompt--${reason}`, compact && 'VelvetRope-prompt--compact')} role="note">
+        <Icon name={reason === 'member' ? 'fas fa-crown' : 'fas fa-lock'} className="VelvetRope-prompt-icon" />
+        <div className="VelvetRope-prompt-body">
+          <h4 className="VelvetRope-prompt-title">{this.title()}</h4>
+          {!compact && <p className="VelvetRope-prompt-text">{t(`lib.prompt.${reason}_text`, { email: app.session?.user?.email?.() || '' })}</p>}
         </div>
-        <div className="GuestGate-prompt-actions">{this.buttons()}</div>
+        <div className="VelvetRope-prompt-actions">{this.buttons()}</div>
       </div>
     );
   }

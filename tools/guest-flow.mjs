@@ -1,12 +1,12 @@
 /**
  * A guest's walk through the forum as a browser does it (single-page
- * navigation, cookies, the alert): GG_BASE=http://guestgate.localhost:8098 node tools/guest-flow.mjs
+ * navigation, cookies, the alert): GG_BASE=http://velvetrope.localhost:8098 node tools/guest-flow.mjs
  * Prints what the guest saw on each discussion, and any console errors.
  */
 import puppeteer from '../../convoro2/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const BASE = process.env.GG_BASE || 'http://guestgate.localhost:8098';
+const BASE = process.env.GG_BASE || 'http://velvetrope.localhost:8098';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
@@ -27,9 +27,9 @@ for (const id of ids) {
   await sleep(1200);
   const seen = await page.evaluate(() => ({
     title: document.querySelector('.DiscussionHero-title')?.textContent,
-    gated: [...document.querySelectorAll('.GuestGate-post')].map((p) => p.className.match(/GuestGate-post--(\w+)/)?.[1]),
-    prompts: [...document.querySelectorAll('.GuestGate-prompt-title')].map((p) => p.textContent),
-    locks: [...document.querySelectorAll('.GuestGate-lock')].map((l) => l.textContent.trim() + (l.title ? ` [${l.title}]` : '')),
+    gated: [...document.querySelectorAll('.VelvetRope-post')].map((p) => p.className.match(/VelvetRope-post--(\w+)/)?.[1]),
+    prompts: [...document.querySelectorAll('.VelvetRope-prompt-title')].map((p) => p.textContent),
+    locks: [...document.querySelectorAll('.VelvetRope-lock')].map((l) => l.textContent.trim() + (l.title ? ` [${l.title}]` : '')),
     alert: document.querySelector('.AlertManager .Alert')?.textContent?.trim() || null,
   }));
   console.log(id, JSON.stringify(seen));
@@ -37,6 +37,6 @@ for (const id of ids) {
 }
 
 const cookies = await context.cookies();
-console.log('cookie', cookies.find((c) => c.name.endsWith('guest_gate'))?.value);
+console.log('cookie', cookies.find((c) => c.name.endsWith('velvet_rope'))?.value);
 console.log('errors', JSON.stringify(errors));
 await browser.close();

@@ -1,16 +1,16 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Formatter;
+namespace ErnestDefoe\VelvetRope\Formatter;
 
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
-use ErnestDefoe\GuestGate\Verdict;
+use ErnestDefoe\VelvetRope\Verdict;
 
 /**
  * Applies a verdict to a post's parsed XML before it is rendered, so what is
@@ -125,7 +125,7 @@ class Transformer
     {
         $name = strtoupper($element->nodeName);
 
-        if (str_starts_with($name, 'GUESTGATE-') || in_array($element->nodeName, self::SILENT, true)) {
+        if (str_starts_with($name, 'VELVETROPE-') || in_array($element->nodeName, self::SILENT, true)) {
             return null;
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace ErnestDefoe\GuestGate\Tests\integration\api;
+namespace ErnestDefoe\VelvetRope\Tests\integration\api;
 
 use PHPUnit\Framework\Attributes\Test;
 
@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
  */
 class FofSeoTest extends GateTestCase
 {
-    protected array $enable = ['flarum-tags', 'flarum-markdown', 'fof-seo', 'ernestdefoe-guest-gate'];
+    protected array $enable = ['flarum-tags', 'flarum-markdown', 'fof-seo', 'ernestdefoe-velvet-rope'];
 
     protected function setUp(): void
     {
@@ -46,7 +46,7 @@ class FofSeoTest extends GateTestCase
         $nodes = $this->jsonLd($page);
         $marked = array_values(array_filter($nodes, fn ($n) => ($n['isAccessibleForFree'] ?? null) === false));
         $this->assertCount(1, $marked, json_encode($nodes));
-        $this->assertSame('.GuestGate-paywalled', $marked[0]['hasPart']['cssSelector']);
+        $this->assertSame('.VelvetRope-paywalled', $marked[0]['hasPart']['cssSelector']);
         $this->assertNotSame('WebPage', $marked[0]['@type'], 'on FoF SEO\'s node, not a second one of ours');
     }
 

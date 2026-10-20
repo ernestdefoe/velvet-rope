@@ -11,8 +11,8 @@ import { t } from '../common/t';
 import type { Gate, MeterInfo } from '../common/types';
 import { act, primaryAction } from './act';
 
-const gateOf = (post: Post): Gate | null => post.attribute<Gate | undefined>('guestGate') || null;
-const meterOf = (post: Post): MeterInfo | null => post.discussion()?.attribute<MeterInfo | undefined>('guestGateMeter') || null;
+const gateOf = (post: Post): Gate | null => post.attribute<Gate | undefined>('velvetRope') || null;
+const meterOf = (post: Post): MeterInfo | null => post.discussion()?.attribute<MeterInfo | undefined>('velvetRopeMeter') || null;
 
 /**
  * Give each locked placeholder the server left in a post its label and make
@@ -22,7 +22,7 @@ const meterOf = (post: Post): MeterInfo | null => post.discussion()?.attribute<M
 function labelLocks(element: Element | undefined, gate: Gate | null) {
   if (!element || !gate) return;
 
-  element.querySelectorAll<HTMLElement>('.GuestGate-lock:not([data-ready])').forEach((lock) => {
+  element.querySelectorAll<HTMLElement>('.VelvetRope-lock:not([data-ready])').forEach((lock) => {
     const text = String(t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${lock.dataset.kind}`));
 
     const icon = document.createElement('i');
@@ -31,7 +31,7 @@ function labelLocks(element: Element | undefined, gate: Gate | null) {
     lock.prepend(icon);
 
     const label = document.createElement('span');
-    label.className = 'GuestGate-lock-label';
+    label.className = 'VelvetRope-lock-label';
     label.textContent = text;
     lock.append(label);
 
@@ -59,7 +59,7 @@ const refetched = new Set<string>();
 const warned = new Set<string>();
 
 function meterNotice(discussion: Discussion) {
-  const meter = discussion.attribute<MeterInfo | undefined>('guestGateMeter');
+  const meter = discussion.attribute<MeterInfo | undefined>('velvetRopeMeter');
   const id = discussion.id();
 
   if (!meter || !meter.counted || !id || warned.has(id) || meter.remaining > meter.warn) return;
@@ -82,11 +82,11 @@ function meterNotice(discussion: Discussion) {
   );
 }
 
-app.initializers.add('ernestdefoe-guest-gate', () => {
+app.initializers.add('ernestdefoe-velvet-rope', () => {
   extend(CommentPost.prototype, 'elementAttrs', function (this: CommentPost, attrs: any) {
     const gate = gateOf(this.attrs.post);
 
-    if (gate) attrs.className = classList(attrs.className, 'GuestGate-post', `GuestGate-post--${gate.mode}`);
+    if (gate) attrs.className = classList(attrs.className, 'VelvetRope-post', `VelvetRope-post--${gate.mode}`);
   });
 
   extend(CommentPost.prototype, 'content', function (this: CommentPost, items: any[]) {
@@ -120,7 +120,7 @@ app.initializers.add('ernestdefoe-guest-gate', () => {
 
   // One listener for every locked placeholder on the page, present or future.
   const onLock = (e: Event) => {
-    const lock = (e.target as Element | null)?.closest?.('.GuestGate-lock[data-ready]');
+    const lock = (e.target as Element | null)?.closest?.('.VelvetRope-lock[data-ready]');
     if (!lock || (e instanceof KeyboardEvent && e.key !== 'Enter' && e.key !== ' ')) return;
 
     // Read from the placeholder itself: it may be in a post list, a search

@@ -1,14 +1,14 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Formatter;
+namespace ErnestDefoe\VelvetRope\Formatter;
 
-use ErnestDefoe\GuestGate\Gate;
-use ErnestDefoe\GuestGate\MailRecipient;
-use ErnestDefoe\GuestGate\Visitors;
+use ErnestDefoe\VelvetRope\Gate;
+use ErnestDefoe\VelvetRope\MailRecipient;
+use ErnestDefoe\VelvetRope\Visitors;
 use Flarum\Http\RequestUtil;
 use Flarum\Post\CommentPost;
 use Flarum\User\User;

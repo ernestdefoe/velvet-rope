@@ -3,7 +3,7 @@
  * Query counts through the full HTTP stack (middleware included), 1 vs 20
  * items, guest and admin, on a forum with tag rules and the meter on.
  *
- *   cd FORUM && php -d memory_limit=1G ~/github/guest-gate/tools/bench.php [seed]
+ *   cd FORUM && php -d memory_limit=1G ~/github/velvet-rope/tools/bench.php [seed]
  *
  * "seed" adds 25 discussions with 3 replies and one with 30 replies, once.
  */
@@ -43,8 +43,8 @@ $count = 0;
 $db->listen(function () use (&$count) { $count++; });
 
 function send($handler, string $path, array $query, ?int $userId, array $cookies = []) {
-    $request = ServerRequestFactory::fromGlobals(['REMOTE_ADDR' => '127.0.0.1', 'HTTP_HOST' => 'guestgate.localhost:8098'], $query, null, $cookies)
-        ->withUri(new Uri('http://guestgate.localhost:8098'.$path))->withMethod('GET');
+    $request = ServerRequestFactory::fromGlobals(['REMOTE_ADDR' => '127.0.0.1', 'HTTP_HOST' => 'velvetrope.localhost:8098'], $query, null, $cookies)
+        ->withUri(new Uri('http://velvetrope.localhost:8098'.$path))->withMethod('GET');
     if ($userId) {
         $token = Flarum\Http\AccessToken::query()->where('user_id', $userId)->where('type', 'developer')->value('token')
             ?? Flarum\Http\DeveloperAccessToken::generate($userId)->tap(fn ($t) => $t->save())->token;

@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate\Seo;
+namespace ErnestDefoe\VelvetRope\Seo;
 
 use FoF\Seo\Event\PreparingPageMeta;
 

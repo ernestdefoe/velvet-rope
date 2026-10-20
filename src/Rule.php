@@ -1,10 +1,10 @@
 <?php
 
 /*
- * This file is part of ernestdefoe/guest-gate.
+ * This file is part of ernestdefoe/velvet-rope.
  */
 
-namespace ErnestDefoe\GuestGate;
+namespace ErnestDefoe\VelvetRope;
 
 /**
  * One gating rule: in these tags (or everywhere), anyone outside these groups

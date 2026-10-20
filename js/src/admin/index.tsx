@@ -4,7 +4,7 @@ import RulesEditor from './components/RulesEditor';
 import MeterPreview from './components/MeterPreview';
 import { t } from '../common/t';
 
-const P = 'ernestdefoe-guest-gate.';
+const P = 'ernestdefoe-velvet-rope.';
 const a = (k: string, p?: any) => t('admin.' + k, p);
 
 /**
@@ -17,14 +17,14 @@ export const extend = [
   new Extend.Admin()
     .customSetting(function (this: any) {
       return (
-        <div className="Form-group GuestGate-intro">
+        <div className="Form-group VelvetRope-intro">
           <h3>{a('rules.heading')}</h3>
           <p className="helpText">{a('rules.help')}</p>
           <RulesEditor setting={this.setting(P + 'rules')} />
         </div>
       );
     }, 100)
-    .customSetting(() => <h3 className="GuestGate-heading">{a('meter.heading')}</h3>, 90)
+    .customSetting(() => <h3 className="VelvetRope-heading">{a('meter.heading')}</h3>, 90)
     .setting(() => ({ setting: P + 'meter_enabled', type: 'boolean', label: a('meter.enabled'), help: a('meter.enabled_help') }), 89)
     .setting(() => ({ setting: P + 'meter_limit', type: 'number', min: 1, max: 100, label: a('meter.limit') }), 88)
     .setting(
@@ -56,8 +56,8 @@ export const extend = [
         <MeterPreview limit={this.setting(P + 'meter_limit')} period={this.setting(P + 'meter_period')} leadIn={this.setting(P + 'meter_lead_in')} />
       );
     }, 83)
-    .customSetting(() => <h3 className="GuestGate-heading">{a('crawlers.heading')}</h3>, 70)
+    .customSetting(() => <h3 className="VelvetRope-heading">{a('crawlers.heading')}</h3>, 70)
     .setting(() => ({ setting: P + 'crawlers', type: 'boolean', label: a('crawlers.enabled'), help: a('crawlers.help') }), 69),
 ];
 
-app.initializers.add('ernestdefoe-guest-gate', () => {});
+app.initializers.add('ernestdefoe-velvet-rope', () => {});
