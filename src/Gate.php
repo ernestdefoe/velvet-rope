@@ -10,6 +10,7 @@ use Flarum\Discussion\Discussion;
 use Flarum\Extension\ExtensionManager;
 use Flarum\Post\Post;
 use Flarum\User\User;
+use Psr\Http\Message\ServerRequestInterface;
 use WeakMap;
 
 /**
@@ -37,15 +38,27 @@ class Gate
         $this->decisions = new WeakMap();
     }
 
-    public function forPost(User $actor, Post $post): Verdict
+    public function forPost(User $actor, Post $post, ?ServerRequestInterface $request = null): Verdict
     {
         if ($actor->isAdmin() || (! $actor->isGuest() && $post->user_id !== null && (int) $post->user_id === (int) $actor->id)) {
             return Verdict::full();
         }
 
         $discussion = $post->relationLoaded('discussion') ? $post->getRelation('discussion') : null;
-        $d = $this->decide($actor, (int) $post->discussion_id, $discussion instanceof Discussion ? $discussion : null);
+        $discussion = $discussion instanceof Discussion ? $discussion : null;
+        $d = $this->decide($actor, (int) $post->discussion_id, $discussion);
         $number = (int) $post->number;
+
+        // Reading a discussion's posts counts it, however they were asked
+        // for: a scraper skipping the discussion page pays the same as a reader.
+        if ($d['meterBlocked'] && $request !== null && self::reads($request)) {
+            $meter = $this->visitors->for($actor)?->meter;
+
+            if ($meter?->visit((int) $post->discussion_id)) {
+                $this->forget($actor, (int) $post->discussion_id);
+                $d = $this->decide($actor, (int) $post->discussion_id, $discussion);
+            }
+        }
 
         if ($d['crawler']) {
             return Verdict::full($this->verdict($d, $d['meterApplies'], $number)->gated());
@@ -85,15 +98,37 @@ class Gate
     {
         $meter = $this->meterFor($actor, (int) $discussion->id, $discussion);
 
-        if ($meter !== null) {
-            $meter->visit((int) $discussion->id);
-
-            // Decide this discussion again, now it has been counted. (A WeakMap
-            // entry can't be changed in place: copy, change, put back.)
-            $decisions = $this->decisions[$actor] ?? [];
-            unset($decisions[(int) $discussion->id]);
-            $this->decisions[$actor] = $decisions;
+        if ($meter !== null && $meter->visit((int) $discussion->id)) {
+            $this->forget($actor, (int) $discussion->id);
         }
+    }
+
+    /**
+     * Whether a request reads a discussion, so counts it: opening it, or
+     * loading its posts as its page does (by discussion, or by ids). Lists,
+     * search and previews only show a counted discussion's posts, and the
+     * lead-in of others, without spending the allowance.
+     */
+    public static function reads(ServerRequestInterface $request): bool
+    {
+        $route = $request->getAttribute('routeName');
+
+        if ($route === 'discussions.show') {
+            return true;
+        }
+
+        $filter = $request->getQueryParams()['filter'] ?? null;
+
+        return $route === 'posts.index' && is_array($filter) && ! isset($filter['q'])
+            && (isset($filter['discussion']) || isset($filter['id']));
+    }
+
+    /** Decide this discussion again. (A WeakMap entry can't be changed in place.) */
+    private function forget(User $actor, int $discussionId): void
+    {
+        $decisions = $this->decisions[$actor] ?? [];
+        unset($decisions[$discussionId]);
+        $this->decisions[$actor] = $decisions;
     }
 
     /** @return array{rule: ?Rule, ruleGates: bool, meterApplies: bool, meterBlocked: bool, crawler: bool, audience: string} */
@@ -113,7 +148,7 @@ class Gate
 
         $visitor = $this->visitors->for($actor);
         $crawler = $actor->isGuest() && $visitor !== null && $this->settings->crawlers() && ($ruleGates || $meterApplies) && $visitor->isVerifiedCrawler();
-        $meterBlocked = $meterApplies && ! $crawler && $visitor?->meter !== null && ! $visitor->meter->allows($discussionId);
+        $meterBlocked = $meterApplies && ! $crawler && $visitor?->meter !== null && ! $visitor->meter->counted($discussionId);
 
         // Who the prompt speaks to: sign up, confirm your email, or join a group.
         $audience = $actor->isGuest() ? 'guest' : ($actor->is_email_confirmed ? 'member' : 'confirm');

@@ -139,4 +139,30 @@ class MeterTest extends GateTestCase
         $after = $this->read(2);
         $this->assertSame(['mode' => 'lead', 'reason' => 'meter'], $after[1]['guestGate']);
     }
+
+    #[Test]
+    public function loading_posts_without_opening_the_discussion_still_counts()
+    {
+        $this->meter(1);
+
+        // A scraper asks for the posts straight away, by discussion or by id.
+        $byDiscussion = (string) $this->get('/api/posts', null, ['filter' => ['discussion' => 1]])->getBody();
+        $this->assertSame(2, substr_count($byDiscussion, self::SECRET), 'the allowance pays for it');
+
+        $byId = (string) $this->get('/api/posts', null, ['filter' => ['id' => '22,23']])->getBody();
+        $this->assertStringNotContainsString(self::SECRET, $byId, 'and is then spent');
+    }
+
+    #[Test]
+    public function search_and_lists_spend_nothing()
+    {
+        $this->meter(1);
+
+        $search = (string) $this->get('/api/discussions', null, ['filter' => ['q' => self::SECRET], 'include' => 'mostRelevantPost'])->getBody();
+        $this->assertStringNotContainsString('says '.self::SECRET, $search, 'an uncounted discussion: lead-in only');
+        $this->get('/api/posts', null, ['filter' => ['q' => self::SECRET]]);
+        $this->get('/api/posts/12');
+
+        $this->assertSame(2, substr_count($this->readAll(2), self::SECRET), 'the allowance is still there');
+    }
 }

@@ -29,8 +29,8 @@ class PostFields
     {
         return [
             Schema\Arr::make('guestGate')
-                ->visible(fn (Post $post, Context $context) => $post instanceof CommentPost && $this->gate->forPost($context->getActor(), $post)->gated())
-                ->get(fn (Post $post, Context $context) => $this->gate->forPost($context->getActor(), $post)->toArray()),
+                ->visible(fn (Post $post, Context $context) => $post instanceof CommentPost && $this->gate->forPost($context->getActor(), $post, $context->request)->gated())
+                ->get(fn (Post $post, Context $context) => $this->gate->forPost($context->getActor(), $post, $context->request)->toArray()),
         ];
     }
 }

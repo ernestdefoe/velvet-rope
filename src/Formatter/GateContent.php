@@ -49,7 +49,7 @@ class GateContent
             return $xml;
         }
 
-        return $this->transformer()->apply($xml, $this->gate->forPost($actor, $context));
+        return $this->transformer()->apply($xml, $this->gate->forPost($actor, $context, $request));
     }
 
     private function reader(CommentPost $post, ?ServerRequestInterface $request): ?User

@@ -52,12 +52,6 @@ final class Meter
         return new self($start, array_slice($ids, 0, $limit), $limit, $period);
     }
 
-    /** Whether reading this discussion is free: already counted, or allowance left. */
-    public function allows(int $discussionId): bool
-    {
-        return in_array($discussionId, $this->ids, true) || count($this->ids) < $this->limit;
-    }
-
     /** Count an opened discussion. False when the allowance has run out. */
     public function visit(int $discussionId): bool
     {
