@@ -10,6 +10,7 @@ use ErnestDefoe\GuestGate\Gate;
 use ErnestDefoe\GuestGate\Settings;
 use Flarum\Api\Context;
 use Flarum\Api\Endpoint\Show;
+use Flarum\Api\Resource\DiscussionResource;
 use Flarum\Api\Schema;
 use Flarum\Discussion\Discussion;
 
@@ -42,7 +43,7 @@ class DiscussionFields
     {
         return [
             Schema\Arr::make('guestGateMeter')
-                ->visible(fn (Discussion $discussion, Context $context) => $context->showing('discussions')
+                ->visible(fn (Discussion $discussion, Context $context) => $context->showing(DiscussionResource::class)
                     && $context->getActor()->isGuest()
                     && $this->gate->meterFor($context->getActor(), (int) $discussion->id, $discussion) !== null)
                 ->get(function (Discussion $discussion, Context $context) {

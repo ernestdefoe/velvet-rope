@@ -87,7 +87,12 @@ class Gate
 
         if ($meter !== null) {
             $meter->visit((int) $discussion->id);
-            unset($this->decisions[$actor][(int) $discussion->id]);
+
+            // Decide this discussion again, now it has been counted. (A WeakMap
+            // entry can't be changed in place: copy, change, put back.)
+            $decisions = $this->decisions[$actor] ?? [];
+            unset($decisions[(int) $discussion->id]);
+            $this->decisions[$actor] = $decisions;
         }
     }
 
