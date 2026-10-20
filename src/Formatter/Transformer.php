@@ -181,9 +181,7 @@ class Transformer
         }
 
         if ($cut === null) {
-            // Shorter than the preview: the post is shown whole, then the prompt.
-            $root->appendChild($dom->createElement(ConfigureTags::MORE));
-
+            // Shorter than the preview: shown whole, then the prompt.
             return;
         }
 

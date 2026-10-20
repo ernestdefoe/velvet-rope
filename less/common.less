@@ -20,7 +20,7 @@
 }
 
 // A preview cut short: its last lines fade out into the prompt.
-.VelvetRope-post--lead .Post-body {
+.VelvetRope-post--lead .Post-body:has(.VelvetRope-more) {
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
   mask-image: linear-gradient(to bottom, #000 55%, transparent);
 }
