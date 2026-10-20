@@ -43,11 +43,16 @@ function labelLocks(element: Element | undefined, gate: Gate | null) {
   });
 }
 
-/** Whether the post before this one (if loaded) was read in full. */
+/**
+ * Whether this is the first gated post in view: the nearest loaded comment
+ * before it (event posts such as renames don't count) was read in full, or
+ * nothing before it is loaded.
+ */
 function firstGated(post: Post): boolean {
   const number = post.number();
-  const posts = post.discussion()?.posts() || [];
-  const before = posts.find((p?: Post) => p?.number() === number - 1);
+  const before = (post.discussion()?.posts() || [])
+    .filter((p?: Post) => p && p.contentType() === 'comment' && p.number() < number)
+    .sort((a?: Post, b?: Post) => b!.number() - a!.number())[0];
   const gate = before ? gateOf(before) : null;
 
   return !before || !gate || gate.mode === 'lock';
