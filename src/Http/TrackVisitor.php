@@ -9,6 +9,7 @@ namespace ErnestDefoe\GuestGate\Http;
 use ErnestDefoe\GuestGate\Crawler;
 use ErnestDefoe\GuestGate\Meter;
 use ErnestDefoe\GuestGate\Settings;
+use ErnestDefoe\GuestGate\TagLookup;
 use ErnestDefoe\GuestGate\Visitor;
 use ErnestDefoe\GuestGate\Visitors;
 use Flarum\Http\CookieFactory;
@@ -35,6 +36,7 @@ class TrackVisitor implements MiddlewareInterface
         protected Visitors $visitors,
         protected Crawler $crawlers,
         protected CookieFactory $cookies,
+        protected TagLookup $tags,
     ) {
     }
 
@@ -43,6 +45,9 @@ class TrackVisitor implements MiddlewareInterface
         if (RequestUtil::isInternal($request)) {
             return $handler->handle($request);
         }
+
+        // A new request: tags looked up for the last one may have changed.
+        $this->tags->flush();
 
         $actor = RequestUtil::getActor($request);
         $meter = null;
