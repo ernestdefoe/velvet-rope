@@ -62,6 +62,12 @@ class Settings
         return self::ids($this->settings->get(self::PREFIX.'meter_exempt_tags'));
     }
 
+    /** Also count by network address, for visitors who clear or refuse cookies. */
+    public function meterByAddress(): bool
+    {
+        return (bool) $this->settings->get(self::PREFIX.'meter_by_ip');
+    }
+
     public function crawlers(): bool
     {
         return (bool) $this->settings->get(self::PREFIX.'crawlers');

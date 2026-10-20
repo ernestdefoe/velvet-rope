@@ -165,4 +165,36 @@ class MeterTest extends GateTestCase
 
         $this->assertSame(2, substr_count($this->readAll(2), self::SECRET), 'the allowance is still there');
     }
+
+    #[Test]
+    public function refusing_cookies_resets_the_allowance_unless_addresses_count_too()
+    {
+        $this->meter(1);
+
+        // No cookies kept: every request is a first visit.
+        foreach ([1, 2, 4] as $id) {
+            $this->jar = [];
+            $this->assertSame(2, substr_count($this->readAll($id), self::SECRET));
+        }
+    }
+
+    #[Test]
+    public function counting_by_address_catches_a_visitor_without_cookies()
+    {
+        $this->meter(1, ['meter_by_ip' => '1']);
+
+        $this->assertSame(2, substr_count($this->readAll(1), self::SECRET));
+
+        foreach ([2, 4] as $id) {
+            $this->jar = [];
+            $this->assertStringNotContainsString(self::SECRET, $this->readAll($id));
+        }
+
+        // The discussion already read stays free from that address.
+        $this->jar = [];
+        $this->assertSame(2, substr_count($this->readAll(1), self::SECRET));
+
+        // No address is stored, only a hash of it.
+        $this->assertStringNotContainsString('127.0.0.1', json_encode($this->database()->table('settings')->get()));
+    }
 }

@@ -14,6 +14,7 @@ use ErnestDefoe\GuestGate\Visitor;
 use ErnestDefoe\GuestGate\Visitors;
 use Flarum\Http\CookieFactory;
 use Flarum\Http\RequestUtil;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -37,6 +38,7 @@ class TrackVisitor implements MiddlewareInterface
         protected Crawler $crawlers,
         protected CookieFactory $cookies,
         protected TagLookup $tags,
+        protected Cache $cache,
     ) {
     }
 
@@ -55,6 +57,10 @@ class TrackVisitor implements MiddlewareInterface
         if ($actor->isGuest() && $this->settings->meterEnabled() && $this->settings->secret() !== '') {
             $raw = $request->getCookieParams()[$this->cookies->getName(self::COOKIE)] ?? null;
             $meter = Meter::fromCookie(is_string($raw) ? $raw : null, $this->settings->secret(), time(), $this->settings->meterLimit(), $this->settings->meterPeriod());
+
+            if ($this->settings->meterByAddress()) {
+                $meter->absorb(fn () => $this->byAddress($request)['ids']);
+            }
         }
 
         $this->visitors->begin($actor, new Visitor($request, $meter, $this->crawlers));
@@ -64,8 +70,32 @@ class TrackVisitor implements MiddlewareInterface
         if ($meter?->dirty()) {
             $cookie = $this->cookies->make(self::COOKIE, $meter->encode($this->settings->secret()), $meter->lifetime(time()));
             $response = $response->withAddedHeader('Set-Cookie', $cookie->__toString());
+
+            if ($this->settings->meterByAddress()) {
+                $entry = $this->byAddress($request);
+                $this->cache->put($entry['key'], ['start' => $entry['start'], 'ids' => $meter->ids()], max(60, $entry['start'] + $this->settings->meterPeriod() - time()));
+            }
         }
 
         return $response;
+    }
+
+    /**
+     * What this network address has read this period. The address itself is
+     * never stored: only a keyed hash of it, as the cache key.
+     *
+     * @return array{key: string, start: int, ids: list<int>}
+     */
+    protected function byAddress(Request $request): array
+    {
+        $key = 'ernestdefoe-guest-gate.ip.'.substr(hash_hmac('sha256', (string) $request->getAttribute('ipAddress'), $this->settings->secret()), 0, 32);
+        $entry = $this->cache->get($key);
+        $fresh = ! is_array($entry) || ! is_int($entry['start'] ?? null) || $entry['start'] + $this->settings->meterPeriod() <= time();
+
+        return [
+            'key' => $key,
+            'start' => $fresh ? time() : $entry['start'],
+            'ids' => $fresh ? [] : Settings::ids($entry['ids'] ?? []),
+        ];
     }
 }

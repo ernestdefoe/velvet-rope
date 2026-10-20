@@ -50,6 +50,7 @@ export const extend = [
           : null,
       84
     )
+    .setting(() => ({ setting: P + 'meter_by_ip', type: 'boolean', label: a('meter.by_ip'), help: a('meter.by_ip_help') }), 83.5)
     .customSetting(function (this: any) {
       return (
         <MeterPreview limit={this.setting(P + 'meter_limit')} period={this.setting(P + 'meter_period')} leadIn={this.setting(P + 'meter_lead_in')} />

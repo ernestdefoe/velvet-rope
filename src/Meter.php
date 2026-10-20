@@ -18,6 +18,9 @@ final class Meter
 {
     private bool $dirty = false;
 
+    /** @var (\Closure(): list<int>)|null Discussions counted elsewhere, loaded when first needed. */
+    private ?\Closure $elsewhere = null;
+
     /** @param list<int> $ids */
     private function __construct(
         private int $start,
@@ -52,9 +55,51 @@ final class Meter
         return new self($start, array_slice($ids, 0, $limit), $limit, $period);
     }
 
+    /**
+     * Add discussions counted elsewhere (the visitor's network address) to
+     * this allowance, up to the limit, the first time the allowance is asked
+     * about: a page that shows no post never looks them up.
+     *
+     * @param \Closure(): list<int> $ids
+     */
+    public function absorb(\Closure $ids): void
+    {
+        $this->elsewhere = $ids;
+    }
+
+    private function load(): void
+    {
+        if ($this->elsewhere === null) {
+            return;
+        }
+
+        $ids = ($this->elsewhere)();
+        $this->elsewhere = null;
+
+        foreach ($ids as $id) {
+            if (count($this->ids) >= $this->limit) {
+                break;
+            }
+
+            if (! in_array($id, $this->ids, true)) {
+                $this->ids[] = $id;
+            }
+        }
+    }
+
+    /** @return list<int> */
+    public function ids(): array
+    {
+        $this->load();
+
+        return $this->ids;
+    }
+
     /** Count an opened discussion. False when the allowance has run out. */
     public function visit(int $discussionId): bool
     {
+        $this->load();
+
         if (in_array($discussionId, $this->ids, true)) {
             return true;
         }
@@ -71,11 +116,15 @@ final class Meter
 
     public function counted(int $discussionId): bool
     {
+        $this->load();
+
         return in_array($discussionId, $this->ids, true);
     }
 
     public function remaining(): int
     {
+        $this->load();
+
         return max(0, $this->limit - count($this->ids));
     }
 
@@ -91,6 +140,7 @@ final class Meter
 
     public function encode(string $secret): string
     {
+        $this->load();
         $payload = $this->start.'.'.implode('-', $this->ids);
 
         return $payload.'.'.self::sign($payload, $secret);

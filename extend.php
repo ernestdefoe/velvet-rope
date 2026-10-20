@@ -66,6 +66,7 @@ return [
         ->default($prefix.'meter_warn', 2)
         ->default($prefix.'meter_lead_in', 280)
         ->default($prefix.'meter_exempt_tags', '[]')
+        ->default($prefix.'meter_by_ip', false)
         ->default($prefix.'crawlers', true)
         // Out of the box: guests read each discussion's first post, and a
         // prompt in place of the replies.

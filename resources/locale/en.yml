@@ -86,6 +86,8 @@ ernestdefoe-guest-gate:
       warn_help: A notice says how many free discussions are left. 0 to never warn.
       lead_in: Lead-in after the limit
       lead_in_help: How many characters of the first post a guest still sees. 0 for none.
+      by_ip: Also count by network address
+      by_ip_help: "Catches visitors who clear or refuse cookies. People sharing one address (an office, a school, a mobile network) share one allowance, and with search engines turned off below, a crawler would be counted too. Only a keyed hash of the address is kept, for the period."
       exempt: Always free in these tags
       exempt_help: Discussions in these tags are never counted.
     crawlers:
