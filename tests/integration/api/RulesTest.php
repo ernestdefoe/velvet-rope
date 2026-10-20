@@ -163,4 +163,19 @@ class RulesTest extends GateTestCase
 
         $this->assertSame(2, substr_count($this->readAll(1), self::SECRET), 'no valid rule: nothing gated');
     }
+
+    #[Test]
+    public function an_upgrade_link_is_only_ever_http_or_a_forum_path()
+    {
+        foreach (['javascript:alert(1)', "\x01javascript:alert(1)", " JaVaScRiPt:alert(1)", '//evil.example', '/\\evil.example', 'data:text/html,x', 'ftp://x'] as $bad) {
+            $this->assertNull(\ErnestDefoe\VelvetRope\Rule::safeUrl($bad), $bad);
+        }
+
+        foreach (['https://shop.example/vip', 'http://x.example', '/subscriptions'] as $good) {
+            $this->assertSame($good, \ErnestDefoe\VelvetRope\Rule::safeUrl($good));
+        }
+
+        $this->rules([['tags' => [], 'readers' => [self::VIP_GROUP], 'upgradeUrl' => 'javascript:alert(1)']]);
+        $this->assertArrayNotHasKey('upgradeUrl', $this->read(1, self::MEMBER)[3]['velvetRope']);
+    }
 }
