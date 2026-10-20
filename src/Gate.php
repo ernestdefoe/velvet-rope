@@ -24,7 +24,7 @@ use WeakMap;
  */
 class Gate
 {
-    /** @var WeakMap<User, array<int, array{rule: ?Rule, ruleGates: bool, meterApplies: bool, meterBlocked: bool, crawler: bool, audience: string}>> */
+    /** @var WeakMap<User, array<int, array{rule: ?Rule, ruleGates: bool, meterApplies: bool, meterBlocked: bool, crawler: bool, audience: string, generic: bool}>> */
     private WeakMap $decisions;
 
     private ?bool $tagsEnabled = null;
@@ -65,6 +65,10 @@ class Gate
         }
 
         $verdict = $this->verdict($d, $d['meterBlocked'], $number);
+
+        if ($d['generic']) {
+            return $verdict->gated() ? $verdict->generic() : $verdict;
+        }
 
         // A guest reading on their allowance gets what a search engine gets.
         if (! $verdict->gated() && $d['meterApplies']) {
@@ -131,7 +135,7 @@ class Gate
         $this->decisions[$actor] = $decisions;
     }
 
-    /** @return array{rule: ?Rule, ruleGates: bool, meterApplies: bool, meterBlocked: bool, crawler: bool, audience: string} */
+    /** @return array{rule: ?Rule, ruleGates: bool, meterApplies: bool, meterBlocked: bool, crawler: bool, audience: string, generic: bool} */
     private function decide(User $actor, int $discussionId, ?Discussion $discussion): array
     {
         if (isset($this->decisions[$actor][$discussionId])) {
@@ -148,13 +152,16 @@ class Gate
 
         $visitor = $this->visitors->for($actor);
         $crawler = $actor->isGuest() && $visitor !== null && $this->settings->crawlers() && ($ruleGates || $meterApplies) && $visitor->isVerifiedCrawler();
-        $meterBlocked = $meterApplies && ! $crawler && $visitor?->meter !== null && ! $visitor->meter->counted($discussionId);
+        // A guest with no visit behind them (a reply rendered once for
+        // everyone, to push live) gets what a guest out of allowance gets.
+        $generic = $meterApplies && $visitor === null;
+        $meterBlocked = $generic || ($meterApplies && ! $crawler && $visitor?->meter !== null && ! $visitor->meter->counted($discussionId));
 
         // Who the prompt speaks to: sign up, confirm your email, or join a group.
         $audience = $actor->isGuest() ? 'guest' : ($actor->is_email_confirmed ? 'member' : 'confirm');
 
         $decisions = $this->decisions[$actor] ?? [];
-        $decisions[$discussionId] = compact('rule', 'ruleGates', 'meterApplies', 'meterBlocked', 'crawler', 'audience');
+        $decisions[$discussionId] = compact('rule', 'ruleGates', 'meterApplies', 'meterBlocked', 'crawler', 'audience', 'generic');
         $this->decisions[$actor] = $decisions;
 
         return $decisions[$discussionId];

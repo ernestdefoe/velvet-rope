@@ -59,6 +59,8 @@ function firstGated(post: Post): boolean {
   return !before || !gate || gate.mode === 'lock';
 }
 
+const refetched = new Set<string>();
+
 /** Free discussions left: say so once per discussion, when few are. */
 const warned = new Set<string>();
 
@@ -105,7 +107,17 @@ app.initializers.add('ernestdefoe-guest-gate', () => {
   });
 
   extend(CommentPost.prototype, ['oncreate', 'onupdate'], function (this: CommentPost) {
-    labelLocks(this.element, gateOf(this.attrs.post));
+    const post = this.attrs.post;
+    const gate = gateOf(post);
+
+    labelLocks(this.element, gate);
+
+    // A post rendered for someone else: a realtime reply, pushed once to
+    // everyone as a guest sees it. Fetch it again as this reader, once.
+    if (gate && (gate.generic || (gate.reason === 'guest' && app.session.user)) && !refetched.has(post.id()!)) {
+      refetched.add(post.id()!);
+      app.store.find<Post>('posts', post.id()!).then(() => m.redraw());
+    }
   });
 
   extend(DiscussionPage.prototype, 'show', function (this: DiscussionPage, _: unknown, discussion: Discussion) {

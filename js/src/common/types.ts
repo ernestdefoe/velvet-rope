@@ -3,6 +3,8 @@ export interface Gate {
   mode: 'lock' | 'lead' | 'hide';
   reason: 'guest' | 'meter' | 'confirm' | 'member';
   upgradeUrl?: string;
+  /** Rendered for no visitor in particular (a realtime push): fetch it again. */
+  generic?: boolean;
 }
 
 /** A discussion's `guestGateMeter` attribute, for metered guests. */

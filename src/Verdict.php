@@ -15,6 +15,9 @@ namespace ErnestDefoe\GuestGate;
  * - lead: the first `chars` characters, then a prompt.
  * - hide: nothing but a blurred placeholder and a prompt.
  *
+ * `generic` marks a verdict made for a guest with no visit behind it, such
+ * as a reply pushed live to everyone: it assumes the allowance is used up.
+ *
  * `reason` says which prompt: "meter" (free discussions used up), "guest"
  * (sign up to read) or "member" (a group this reader isn't in).
  */
@@ -36,7 +39,14 @@ final class Verdict
         public readonly ?string $reason = null,
         public readonly ?string $upgradeUrl = null,
         public readonly bool $wall = false,
+        public readonly bool $generic = false,
     ) {
+    }
+
+    /** The same verdict, marked as made for no visitor in particular. */
+    public function generic(): self
+    {
+        return new self($this->mode, $this->lock, $this->chars, $this->reason, $this->upgradeUrl, $this->wall, true);
     }
 
     public static function full(bool $wall = false): self
@@ -49,13 +59,19 @@ final class Verdict
         return $this->mode !== self::FULL;
     }
 
-    /** @return array{mode: string, reason: string|null, upgradeUrl?: string} */
+    /** @return array{mode: string, reason: string|null, upgradeUrl?: string, generic?: true} */
     public function toArray(): array
     {
         $data = ['mode' => $this->mode, 'reason' => $this->reason];
 
         if ($this->upgradeUrl !== null) {
             $data['upgradeUrl'] = $this->upgradeUrl;
+        }
+
+        // Rendered for no one in particular (a realtime push): the page
+        // fetches it again as its reader.
+        if ($this->generic) {
+            $data['generic'] = true;
         }
 
         return $data;

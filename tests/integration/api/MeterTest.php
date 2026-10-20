@@ -197,4 +197,19 @@ class MeterTest extends GateTestCase
         // No address is stored, only a hash of it.
         $this->assertStringNotContainsString('127.0.0.1', json_encode($this->database()->table('settings')->get()));
     }
+
+    #[Test]
+    public function a_reply_rendered_for_no_visitor_assumes_the_allowance_is_spent()
+    {
+        // What flarum/realtime does: the API client, as a brand-new Guest.
+        $this->meter(5);
+        $client = $this->app()->getContainer()->make(\Flarum\Api\Client::class);
+
+        $body = (string) $client->withActor(new \Flarum\User\Guest())->get('/posts/12')->getBody();
+        $this->assertStringNotContainsString(self::SECRET, $body);
+        $this->assertStringContainsString('"generic":true', $body, 'so the page fetches it again for its reader');
+
+        // A real guest, with allowance, reads it.
+        $this->assertSame(2, substr_count($this->readAll(1), self::SECRET));
+    }
 }
