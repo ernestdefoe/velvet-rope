@@ -1,0 +1,92 @@
+{
+  "name": "ernestdefoe/guest-gate",
+  "description": "Turn readers into members on Flarum 2: give guests a set number of free discussions per day, week or month, then show a lead-in and a sign-up prompt; blur replies, images, links, files and embeds for guests or chosen groups, per tag; with search-engine-friendly paywall markup.",
+  "keywords": [
+    "flarum",
+    "flarum-extension",
+    "guest",
+    "registration",
+    "paywall",
+    "blur",
+    "metered",
+    "sign up"
+  ],
+  "type": "flarum-extension",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "ernestdefoe",
+      "email": "ernestdefoe@gmail.com"
+    }
+  ],
+  "homepage": "https://github.com/ernestdefoe/guest-gate",
+  "support": {
+    "issues": "https://github.com/ernestdefoe/guest-gate/issues",
+    "source": "https://github.com/ernestdefoe/guest-gate"
+  },
+  "require": {
+    "php": "^8.3",
+    "flarum/core": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ErnestDefoe\\GuestGate\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ErnestDefoe\\GuestGate\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Guest Gate",
+      "category": "feature",
+      "icon": {
+        "name": "fas fa-door-open",
+        "backgroundColor": "#5b3a8c",
+        "color": "#fff"
+      },
+      "optional-dependencies": [
+        "flarum/tags",
+        "fof/seo"
+      ]
+    },
+    "flarum-cli": {
+      "modules": {
+        "js": true,
+        "css": true,
+        "locale": true
+      }
+    }
+  },
+  "require-dev": {
+    "flarum/phpstan": "^2.0",
+    "flarum/testing": "^2.0",
+    "flarum/tags": "^2.0",
+    "flarum/mentions": "^2.0",
+    "flarum/subscriptions": "^2.0",
+    "laravel/pint": "^1.32",
+    "flarum/markdown": "^2.0"
+  },
+  "scripts": {
+    "test": [
+      "@test:integration"
+    ],
+    "test:integration": "phpunit -c tests/phpunit.integration.xml",
+    "test:setup": "@php tests/integration/setup.php",
+    "analyse:phpstan": "phpstan analyse",
+    "style": "pint --test",
+    "style:fix": "pint"
+  },
+  "scripts-descriptions": {
+    "test": "Runs all tests.",
+    "test:integration": "Runs all integration tests.",
+    "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+    "analyse:phpstan": "Run static analysis",
+    "style": "Checks the code style",
+    "style:fix": "Fixes the code style"
+  },
+  "minimum-stability": "beta",
+  "prefer-stable": true
+}
