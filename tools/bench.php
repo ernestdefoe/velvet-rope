@@ -7,7 +7,6 @@
  *
  * "seed" adds 25 discussions with 3 replies and one with 30 replies, once.
  */
-use Flarum\Http\RequestUtil;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\Uri;
 
@@ -25,13 +24,18 @@ if (($argv[1] ?? '') === 'seed') {
         for ($n = 1; $n <= $replies + 1; $n++) {
             $pid = $db->table('posts')->insertGetId(['discussion_id' => $id, 'user_id' => $user, 'type' => 'comment', 'number' => $n, 'created_at' => $now, 'is_private' => 0,
                 'content' => '<r><p>Bench post '.$n.' with <URL url="https://example.com/x">a link</URL> and words.</p></r>']);
-            if ($n === 1) $db->table('discussions')->where('id', $id)->update(['first_post_id' => $pid]);
+            if ($n === 1) {
+                $db->table('discussions')->where('id', $id)->update(['first_post_id' => $pid]);
+            }
             $db->table('discussions')->where('id', $id)->update(['last_post_id' => $pid]);
         }
         $db->table('discussion_tag')->insert(['discussion_id' => $id, 'tag_id' => $tag]);
+
         return $id;
     };
-    for ($i = 0; $i < 25; $i++) $make("Bench discussion $i", 3);
+    for ($i = 0; $i < 25; $i++) {
+        $make("Bench discussion $i", 3);
+    }
     $long = $make('Bench long discussion', 30);
     echo "seeded, long = $long\n";
     exit;
@@ -42,7 +46,8 @@ $admin = 1;
 $count = 0;
 $db->listen(function () use (&$count) { $count++; });
 
-function send($handler, string $path, array $query, ?int $userId, array $cookies = []) {
+function send($handler, string $path, array $query, ?int $userId, array $cookies = [])
+{
     $request = ServerRequestFactory::fromGlobals(['REMOTE_ADDR' => '127.0.0.1', 'HTTP_HOST' => 'velvetrope.localhost:8098'], $query, null, $cookies)
         ->withUri(new Uri('http://velvetrope.localhost:8098'.$path))->withMethod('GET');
     if ($userId) {
@@ -50,6 +55,7 @@ function send($handler, string $path, array $query, ?int $userId, array $cookies
             ?? Flarum\Http\DeveloperAccessToken::generate($userId)->tap(fn ($t) => $t->save())->token;
         $request = $request->withHeader('Authorization', 'Token '.$token);
     }
+
     return $handler->handle($request);
 }
 

@@ -206,21 +206,6 @@ class Transformer
         return false;
     }
 
-    private function text(DOMNode $node): string
-    {
-        $text = '';
-
-        foreach ($node->childNodes as $child) {
-            if ($child instanceof DOMElement && in_array($child->nodeName, self::SILENT, true)) {
-                continue;
-            }
-
-            $text .= $child instanceof DOMElement ? $this->text($child) : $child->textContent;
-        }
-
-        return $text;
-    }
-
     /** How tall the blurred placeholder is: about one line per 90 characters. */
     private function lines(string $xml): int
     {

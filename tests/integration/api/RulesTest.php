@@ -167,7 +167,7 @@ class RulesTest extends GateTestCase
     #[Test]
     public function an_upgrade_link_is_only_ever_http_or_a_forum_path()
     {
-        foreach (['javascript:alert(1)', "\x01javascript:alert(1)", " JaVaScRiPt:alert(1)", '//evil.example', '/\\evil.example', 'data:text/html,x', 'ftp://x'] as $bad) {
+        foreach (['javascript:alert(1)', "\x01javascript:alert(1)", ' JaVaScRiPt:alert(1)', '//evil.example', '/\\evil.example', 'data:text/html,x', 'ftp://x'] as $bad) {
             $this->assertNull(\ErnestDefoe\VelvetRope\Rule::safeUrl($bad), $bad);
         }
 
