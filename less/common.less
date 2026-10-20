@@ -4,8 +4,7 @@
 // A hidden reply: lines of blurred "text", drawn without any text at all.
 .GuestGate-veil {
   --gg-line: color-mix(in srgb, var(--muted-color) 35%, transparent);
-  height: calc(var(--gg-lines, 3) * 1.6em);
-  min-height: 1.6em;
+  height: ~"calc(max(var(--gg-lines, 3), 2) * 1.6em - 0.85em)";
   margin: 4px 0 0;
   border-radius: 4px;
   background: repeating-linear-gradient(
@@ -123,11 +122,10 @@
   gap: 8px;
 }
 
-// Under each hidden reply: one line, smaller, overlapping the veil's end.
+// Under each hidden reply: one line, smaller.
 .GuestGate-prompt--compact {
-  margin-top: -0.8em;
+  margin-top: 10px;
   padding: 10px 14px;
-  position: relative;
 
   .GuestGate-prompt-icon {
     font-size: 1em;

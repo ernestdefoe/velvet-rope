@@ -22,7 +22,7 @@ export default class MeterPreview extends Component<Attrs> {
       <div className="Form-group">
         {frame(t('admin.preview.title_meter'), [
           samplePost({ number: 1, gate: { mode: leadIn > 0 ? 'lead' : 'hide', reason: 'meter' }, locked: [], chars: leadIn, meter }),
-          samplePost({ number: 2, gate: { mode: 'hide', reason: 'meter' }, locked: [] }),
+          samplePost({ number: 2, gate: { mode: 'hide', reason: 'meter' }, locked: [], compact: true }),
         ])}
       </div>
     );

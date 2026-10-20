@@ -23,22 +23,40 @@ function labelLocks(element: Element | undefined, gate: Gate | null) {
   if (!element || !gate) return;
 
   element.querySelectorAll<HTMLElement>('.GuestGate-lock:not([data-ready])').forEach((lock) => {
-    const label = document.createElement('span');
-    label.className = 'GuestGate-lock-label';
-    label.textContent = String(t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${lock.dataset.kind}`));
+    const text = String(t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${lock.dataset.kind}`));
 
     const icon = document.createElement('i');
     icon.className = 'fas fa-lock';
     icon.setAttribute('aria-hidden', 'true');
-
     lock.prepend(icon);
-    lock.append(label);
+
+    // A link that kept its words shows them; the prompt becomes its tooltip.
+    if (lock.textContent?.trim()) {
+      lock.title = text;
+      lock.setAttribute('aria-label', lock.textContent.trim() + ': ' + text);
+    } else {
+      const label = document.createElement('span');
+      label.className = 'GuestGate-lock-label';
+      label.textContent = text;
+      lock.append(label);
+    }
+
     lock.setAttribute('role', 'button');
     lock.setAttribute('tabindex', '0');
     lock.dataset.ready = '';
     lock.dataset.reason = gate.reason;
     if (gate.upgradeUrl) lock.dataset.upgrade = gate.upgradeUrl;
   });
+}
+
+/** Whether the post before this one (if loaded) was read in full. */
+function firstGated(post: Post): boolean {
+  const number = post.number();
+  const posts = post.discussion()?.posts() || [];
+  const before = posts.find((p?: Post) => p?.number() === number - 1);
+  const gate = before ? gateOf(before) : null;
+
+  return !before || !gate || gate.mode === 'lock';
 }
 
 /** Free discussions left: say so once per discussion, when few are. */
@@ -79,9 +97,10 @@ app.initializers.add('ernestdefoe-guest-gate', () => {
     const post = this.attrs.post;
     const gate = gateOf(post);
 
-    // Locked media explains itself; a preview or a hidden reply gets the prompt.
+    // Locked media explains itself; a preview or a hidden reply gets the
+    // prompt: in full on the first gated post in view, one line after it.
     if (gate && gate.mode !== 'lock') {
-      items.push(<GatePrompt gate={gate} meter={meterOf(post)} compact={gate.mode === 'hide'} onaction={act} />);
+      items.push(<GatePrompt gate={gate} meter={meterOf(post)} compact={!firstGated(post)} onaction={act} />);
     }
   });
 

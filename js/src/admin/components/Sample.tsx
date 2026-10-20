@@ -17,11 +17,12 @@ export function cut(text: string, chars: number): string {
 }
 
 function lock(kind: LockKind, gate: Gate, words?: string) {
+  const text = t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${kind}`);
+
   return (
-    <span className="GuestGate-lock" data-kind={kind}>
+    <span className="GuestGate-lock" data-kind={kind} title={words ? String(text) : undefined}>
       <i className="fas fa-lock" aria-hidden="true" />
-      {words}
-      <span className="GuestGate-lock-label">{t(`lib.lock.${gate.reason === 'meter' ? 'guest' : gate.reason}.${kind}`)}</span>
+      {words || <span className="GuestGate-lock-label">{text}</span>}
     </span>
   );
 }
@@ -74,10 +75,12 @@ export interface SamplePostAttrs {
   locked: LockKind[];
   chars?: number;
   meter?: MeterInfo | null;
+  /** The one-line prompt (every gated post after the first). */
+  compact?: boolean;
 }
 
 /** One post of the preview discussion, drawn with the forum's own classes. */
-export function samplePost({ number, gate, locked, chars = 0, meter }: SamplePostAttrs) {
+export function samplePost({ number, gate, locked, chars = 0, meter, compact = false }: SamplePostAttrs) {
   const text = String(s(number === 1 ? 'first_post' : 'reply'));
   const mode = gate?.mode;
 
@@ -106,7 +109,7 @@ export function samplePost({ number, gate, locked, chars = 0, meter }: SamplePos
         <span className="GuestGate-sample-name">{s('author', { number })}</span>
       </div>
       <div className="Post-body">{body}</div>
-      {gate && mode !== 'lock' && <GatePrompt gate={gate} meter={meter} compact={mode === 'hide'} preview />}
+      {gate && mode !== 'lock' && <GatePrompt gate={gate} meter={meter} compact={compact} preview />}
     </div>
   );
 }

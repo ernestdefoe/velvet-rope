@@ -24,7 +24,7 @@ export default class RulePreview extends Component<ComponentAttrs & { rule: Rule
           : null
         : { mode: rule.preview > 0 ? 'lead' : 'hide', reason, upgradeUrl: rule.upgradeUrl };
 
-      posts.push(samplePost({ number, gate, locked: rule.lock, chars: rule.preview }));
+      posts.push(samplePost({ number, gate, locked: rule.lock, chars: rule.preview, compact: number > Math.max(rule.freePosts, 0) + 1 }));
     }
 
     if (rule.readers.length === 0) {

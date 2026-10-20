@@ -102,7 +102,7 @@ export default class RulesEditor extends Component<ComponentAttrs & { setting: S
 
         <div className="GuestGate-rule-grid">
           <div className="GuestGate-rule-fields">
-            {tagsOn ? <FormGroup type="flarum-tags.select-tags" label={a('tags')} help={a('tags_help')} bidi={this.tagStreams[i]} /> : null}
+            {tagsOn ? <FormGroup type="flarum-tags.select-tags" label={a('tags')} help={a('tags_help')} stream={this.tagStreams[i]} /> : null}
 
             <div className="Form-group">
               <label>{a('readers')}</label>
