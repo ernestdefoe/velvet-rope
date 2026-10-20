@@ -1,0 +1,160 @@
+@import "common.less";
+
+.GuestGate-heading {
+  margin: 32px 0 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--control-bg);
+}
+
+.GuestGate-intro > h3 {
+  margin-top: 0;
+}
+
+.GuestGate-rules-empty {
+  color: var(--muted-color);
+  font-style: italic;
+}
+
+.GuestGate-rule {
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--control-bg);
+  border-radius: var(--border-radius);
+  background: var(--body-bg);
+
+  &.is-dragging {
+    opacity: 0.5;
+  }
+}
+
+.GuestGate-rule-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  b {
+    flex: 1;
+  }
+}
+
+.GuestGate-rule-grip {
+  cursor: grab;
+  color: var(--muted-color);
+  padding: 4px;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.GuestGate-rule-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+
+  @media @phone {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.GuestGate-rule-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  .FormControl {
+    max-width: 140px;
+  }
+}
+
+.GuestGate-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+
+  .checkbox {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    font-weight: normal;
+  }
+}
+
+// The preview: a small discussion drawn with the forum's own classes.
+.GuestGate-preview {
+  border: 1px solid var(--control-bg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--body-bg);
+}
+
+.GuestGate-preview-title {
+  padding: 8px 14px;
+  background: var(--control-bg);
+  color: var(--control-color);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.GuestGate-preview-stream {
+  padding: 4px 14px 14px;
+}
+
+.GuestGate-sample-post {
+  padding: 14px 0 0;
+
+  & + & {
+    border-top: 1px solid var(--control-bg);
+    margin-top: 14px;
+  }
+
+  .Post-body {
+    font-size: 0.95em;
+    line-height: 1.6;
+
+    p {
+      margin: 0 0 8px;
+    }
+  }
+}
+
+.GuestGate-sample-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.GuestGate-sample-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary-color) 40%, transparent);
+}
+
+.GuestGate-sample-image,
+.GuestGate-sample-embed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  margin: 8px 0;
+  border-radius: var(--border-radius);
+  background: color-mix(in srgb, var(--primary-color) 15%, transparent);
+  color: var(--primary-color);
+  font-size: 1.6em;
+}
+
+.GuestGate-sample-embed {
+  background: #111;
+  color: #fff;
+}
+
+.GuestGate-sample-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

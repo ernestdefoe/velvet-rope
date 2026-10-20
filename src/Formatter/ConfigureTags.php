@@ -27,7 +27,7 @@ class ConfigureTags
     {
         $hide = $config->tags->add(self::HIDE);
         $hide->attributes->add('lines')->filterChain->append('#uint');
-        $hide->template = '<div class="GuestGate-veil" data-lines="{@lines}" aria-hidden="true"></div>';
+        $hide->template = '<div class="GuestGate-veil" style="--gg-lines:{@lines}" aria-hidden="true"></div>';
 
         $lock = $config->tags->add(self::LOCK);
         $lock->attributes->add('kind')->filterChain->append('#regexp')->setRegexp('/^(?:image|link|file|embed)$/D');

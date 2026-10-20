@@ -1,0 +1,162 @@
+// Shared by the forum and the admin preview. Colours come from the theme's
+// own variables, so it fits stock Flarum, dark mode and themes alike.
+
+// A hidden reply: lines of blurred "text", drawn without any text at all.
+.GuestGate-veil {
+  --gg-line: color-mix(in srgb, var(--muted-color) 35%, transparent);
+  height: calc(var(--gg-lines, 3) * 1.6em);
+  min-height: 1.6em;
+  margin: 4px 0 0;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--gg-line) 0,
+    var(--gg-line) 0.75em,
+    transparent 0.75em,
+    transparent 1.6em
+  );
+  filter: blur(3px);
+  -webkit-mask-image: linear-gradient(to right, #000 70%, transparent);
+  mask-image: linear-gradient(to right, #000 70%, transparent);
+}
+
+// A preview cut short: its last lines fade out into the prompt.
+.GuestGate-post--lead .Post-body {
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+
+.GuestGate-more {
+  color: var(--muted-color);
+}
+
+// Locked media, in place of an image, link, file or embed.
+.GuestGate-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--control-bg);
+  color: var(--control-color);
+  font-size: 0.9em;
+  line-height: 1.6;
+  vertical-align: baseline;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--control-bg-shaded);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+  }
+
+  .fa-lock {
+    font-size: 0.85em;
+    opacity: 0.8;
+  }
+
+  &[data-kind='image'],
+  &[data-kind='embed'] {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0;
+    padding: 28px 16px;
+    border-radius: var(--border-radius);
+    border: 1px dashed color-mix(in srgb, var(--muted-color) 40%, transparent);
+    text-align: center;
+  }
+}
+
+.GuestGate-lock-label {
+  font-weight: 600;
+}
+
+// The prompt: a card in place of what was held back.
+.GuestGate-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  border-radius: var(--border-radius);
+  background: var(--control-bg);
+  color: var(--text-color);
+
+  .GuestGate-post--lead & {
+    margin-top: 4px;
+  }
+}
+
+.GuestGate-prompt-icon {
+  flex: 0 0 auto;
+  font-size: 1.4em;
+  color: var(--primary-color);
+}
+
+.GuestGate-prompt-body {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.GuestGate-prompt-title {
+  margin: 0;
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.GuestGate-prompt-text {
+  margin: 4px 0 0;
+  color: var(--muted-color);
+  line-height: 1.5;
+}
+
+.GuestGate-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Under each hidden reply: one line, smaller, overlapping the veil's end.
+.GuestGate-prompt--compact {
+  margin-top: -0.8em;
+  padding: 10px 14px;
+  position: relative;
+
+  .GuestGate-prompt-icon {
+    font-size: 1em;
+  }
+
+  .GuestGate-prompt-title {
+    font-size: 0.95em;
+  }
+
+  .Button {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}
+
+@media @phone {
+  .GuestGate-prompt {
+    padding: 14px 16px;
+  }
+
+  .GuestGate-prompt-actions {
+    width: 100%;
+
+    .Button {
+      flex: 1 1 0;
+    }
+  }
+
+  .GuestGate-prompt--compact .GuestGate-prompt-body {
+    flex-basis: calc(100% - 40px);
+  }
+}
