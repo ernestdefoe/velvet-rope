@@ -24,7 +24,7 @@ class CrawlerTest extends GateTestCase
 
                 return $host;
             },
-            fn (string $name) => $name === $host ? $forward : [],
+            fn (string $name) => rtrim($name, '.') === rtrim($host, '.') ? $forward : [],
         );
     }
 
@@ -101,5 +101,41 @@ class CrawlerTest extends GateTestCase
         $this->assertStringContainsString('<div class="VelvetRope-paywalled">', $posts[2]['contentHtml']);
         $this->assertStringContainsString(self::SECRET, $posts[2]['contentHtml']);
         $this->assertStringContainsString('"isAccessibleForFree":false', (string) $this->get('/d/1')->getBody());
+    }
+
+    #[Test]
+    public function google_hosts_anyone_can_rent_or_drive_are_not_googlebot()
+    {
+        // A Google Cloud / App Engine VM (its reverse DNS is the customer's to
+        // set under googleusercontent.com), and Google's user-triggered proxies
+        // under google.com, which any user can point at a page.
+        foreach (['1-2-3-4.gae.googleusercontent.com', '4.3.2.1.bc.googleusercontent.com', 'google-proxy-66-249-84-1.google.com', 'rate-limited-proxy-66-249-91-1.google.com', 'crawl-66-249-66-1.googlebot.com.evil.example'] as $host) {
+            $this->app()->getContainer()->make('cache.store')->flush();
+            $this->dns($host, ['127.0.0.1']);
+            $this->jar = [];
+            $this->assertStringNotContainsString(self::SECRET, json_encode($this->read(1, null, ['User-Agent' => self::GOOGLEBOT])), $host);
+        }
+    }
+
+    #[Test]
+    public function a_trailing_dot_on_a_real_crawler_name_still_verifies()
+    {
+        $this->dns('crawl-66-249-66-1.googlebot.com.', ['127.0.0.1']);
+        $this->assertStringContainsString(self::SECRET, json_encode($this->read(1, null, ['User-Agent' => self::GOOGLEBOT])));
+    }
+
+    #[Test]
+    public function other_engines_verify_only_on_their_documented_hosts()
+    {
+        $bing = 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)';
+        $this->dns('msnbot-40-77-167-1.search.msn.com', ['127.0.0.1']);
+        $this->assertStringContainsString(self::SECRET, json_encode($this->read(1, null, ['User-Agent' => $bing])));
+
+        foreach (['msnbot.cloudapp.net', 'host.msn.com'] as $host) {
+            $this->app()->getContainer()->make('cache.store')->flush();
+            $this->dns($host, ['127.0.0.1']);
+            $this->jar = [];
+            $this->assertStringNotContainsString(self::SECRET, json_encode($this->read(1, null, ['User-Agent' => $bing])), $host);
+        }
     }
 }

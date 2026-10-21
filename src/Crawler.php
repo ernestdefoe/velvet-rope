@@ -20,10 +20,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Crawler
 {
-    /** User-agent token => hostname suffixes its addresses reverse-resolve to. */
+    /**
+     * User-agent token => the hostname suffixes its crawlers reverse-resolve to,
+     * as each engine documents them. Only crawlers that index, never a host a
+     * stranger can control: Google's googleusercontent.com (App Engine and
+     * Cloud VMs) and its google.com proxies (user-triggered fetchers such as
+     * translation) are left out on purpose.
+     */
     public const ENGINES = [
-        'googlebot' => ['.googlebot.com', '.google.com', '.googleusercontent.com'],
-        'google-inspectiontool' => ['.googlebot.com', '.google.com'],
+        'googlebot' => ['.googlebot.com'],
+        'google-inspectiontool' => ['.googlebot.com'],
         'bingbot' => ['.search.msn.com'],
         'applebot' => ['.applebot.apple.com'],
         'yandex' => ['.yandex.ru', '.yandex.net', '.yandex.com'],
@@ -84,7 +90,7 @@ class Crawler
             return false;
         }
 
-        $host = strtolower((string) ($this->reverse)($ip));
+        $host = rtrim(strtolower((string) ($this->reverse)($ip)), '.');
         $verified = $host !== '' && $host !== $ip && in_array(inet_pton($ip), array_map(fn ($a) => @inet_pton($a), ($this->forward)($host)), true);
 
         // The verified hostname, or '' for "not a crawler": both are cached.
